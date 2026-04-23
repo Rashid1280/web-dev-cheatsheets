@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML, CSS, BOOTSTTRAP — HTML, CSS & Bootstrap</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #181c27;
+    --border: #252a38;
+    --accent-html: #f97316;
+    --accent-css: #3b82f6;
+    --accent-boot: #a855f7;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --code-bg: #0a0c10;
+    --code-border: #1e2433;
+    --green: #22d3a5;
+    --yellow: #fbbf24;
+    --red: #f87171;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(135deg, #0d0f14 0%, #13161e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 16px 18px;
+    text-align: center;
+    position: static;
+    
+    
+    backdrop-filter: blur(12px);
+  }
+  .site-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, var(--accent-html), var(--accent-css), var(--accent-boot));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .site-header p { color: var(--muted); margin-top: 6px; font-size: 14px; }
+  .badges { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .badge:hover { opacity: 0.8; }
+  .badge-html { background: rgba(249,115,22,0.15); color: var(--accent-html); border: 1px solid rgba(249,115,22,0.3); }
+  .badge-css  { background: rgba(59,130,246,0.15); color: var(--accent-css);  border: 1px solid rgba(59,130,246,0.3); }
+  .badge-boot { background: rgba(168,85,247,0.15); color: var(--accent-boot); border: 1px solid rgba(168,85,247,0.3); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* ── TOPIC HEADER ── */
+  .topic-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 48px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .topic-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .topic-icon.html { background: rgba(249,115,22,0.15); color: var(--accent-html); border: 1px solid rgba(249,115,22,0.25); }
+  .topic-icon.css  { background: rgba(59,130,246,0.15);  color: var(--accent-css);  border: 1px solid rgba(59,130,246,0.25); }
+  .topic-icon.boot { background: rgba(168,85,247,0.15);  color: var(--accent-boot); border: 1px solid rgba(168,85,247,0.25); }
+  .topic-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; }
+
+  /* ── SECTION GROUP LABEL ── */
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 12px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #353d52; }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+  }
+  .card-question {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+  .card-arrow {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.25s, background 0.2s;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .card.open .card-arrow { transform: rotate(180deg); background: var(--border); }
+
+  .card-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  .card.open .card-body { display: block; }
+
+  /* answer text */
+  .answer-intro {
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.8;
+  }
+  .answer-intro strong { color: var(--green); }
+
+  /* ── CODE BLOCK ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .inline-code {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--yellow);
+  }
+
+  /* syntax colors */
+  .kw  { color: #c678dd; }
+  .str { color: #98c379; }
+  .cmt { color: #5c6370; font-style: italic; }
+  .tag { color: #e06c75; }
+  .atr { color: #d19a66; }
+  .val { color: #98c379; }
+  .num { color: #d19a66; }
+  .fn  { color: #61afef; }
+  .cls { color: #e5c07b; }
+
+  /* ── TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .compare-table th {
+    background: #1a1f2e;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+  .compare-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .compare-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+  /* ── LIST ── */
+  .answer-list {
+    list-style: none;
+    margin: 10px 0;
+  }
+  .answer-list li {
+    padding: 6px 0 6px 22px;
+    position: relative;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .answer-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-size: 11px;
+    top: 8px;
+  }
+
+  /* ── NOTE BOX ── */
+  .note {
+    background: rgba(251,191,36,0.07);
+    border-left: 3px solid var(--yellow);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #d4b96a;
+  }
+  .tip {
+    background: rgba(34,211,165,0.07);
+    border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #5ec9a8;
+  }
+
+  /* expand all */
+  .expand-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    transition: all 0.2s;
+  }
+  .expand-btn:hover { color: var(--text); border-color: #353d52; }
+
+  /* topic jump bar */
+  .toc {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    margin-top: 10px;
+  }
+  .toc a {
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .toc a.html { background: rgba(249,115,22,0.1); color: var(--accent-html); border: 1px solid rgba(249,115,22,0.2); }
+  .toc a.css  { background: rgba(59,130,246,0.1);  color: var(--accent-css);  border: 1px solid rgba(59,130,246,0.2); }
+  .toc a.boot { background: rgba(168,85,247,0.1);  color: var(--accent-boot); border: 1px solid rgba(168,85,247,0.2); }
+  .toc a:hover { opacity: 0.8; transform: translateY(-1px); }
+
+  h3.sub { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--muted); margin: 14px 0 6px; }
+
+html{scroll-behavior:smooth;}
+body{overflow-x:hidden;}
+img,table{max-width:100%;}
+.site-header{margin-bottom:8px;}
+.card{border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.18);}
+.card-header{padding:14px 16px;}
+.card-body{padding:0 16px 16px;padding-top:16px;}
+pre{padding:14px; font-size:12px;}
+.toc{position:sticky; top:0; background:rgba(13,15,20,.92); padding:10px 0; backdrop-filter:blur(8px); z-index:10;}
+@media (max-width:768px){
+ body{font-size:14px;line-height:1.6;}
+ .container{padding:16px 12px 60px;}
+ .site-header h1{font-size:1.35rem;line-height:1.2;}
+ .site-header p{font-size:12px;}
+ .badges{gap:8px;margin-top:10px;}
+ .badge{font-size:11px;padding:4px 10px;}
+ .topic-header{margin:28px 0 14px;gap:10px;}
+ .topic-title{font-size:1.15rem;}
+ .topic-icon{width:36px;height:36px;font-size:11px;}
+ .card-question{font-size:13px;line-height:1.45;}
+ .compare-table{display:block;overflow-x:auto;white-space:nowrap;}
+ .toc{gap:8px;overflow:auto;flex-wrap:nowrap;padding-bottom:4px;}
+ .toc a{white-space:nowrap;}
+ .expand-btn{width:100%;}
+}
+
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <h1>HTML, CSS, BOOTSTTRAP</h1>
+  <p>HTML &nbsp;·&nbsp; CSS &nbsp;·&nbsp; Bootstrap &nbsp;·&nbsp; Part 1</p>
+  <div class="badges">
+    <span class="badge badge-html">HTML</span>
+    <span class="badge badge-css">CSS</span>
+    <span class="badge badge-boot">Bootstrap</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="toc">
+    <a href="#html" class="html">↓ HTML</a>
+    <a href="#css" class="css">↓ CSS</a>
+    <a href="#bootstrap" class="boot">↓ Bootstrap</a>
+  </div>
+
+  <button class="expand-btn" onclick="toggleAll()">⊞ Expand All</button>
+
+  <!-- ═══════════════════════════════════ HTML ═══════════════════════════════════ -->
+  <div id="html">
+    <div class="topic-header">
+      <div class="topic-icon html">HTML</div>
+      <div class="topic-title">HTML</div>
+    </div>
+
+    <div class="section-label">Basics &amp; Document Structure</div>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is HTML? Differences between HTML &amp; HTML5? Advantages of HTML5?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>HTML (HyperText Markup Language)</strong> is the standard language used to create and structure content on the web. It uses <em>tags</em> (like <span class="inline-code">&lt;p&gt;</span>, <span class="inline-code">&lt;div&gt;</span>, <span class="inline-code">&lt;h1&gt;</span>) to tell the browser how to display text, images, links, and other content. It is NOT a programming language — it cannot do logic. It just describes structure.</p>
+        <table class="compare-table">
+          <tr><th>HTML (4)</th><th>HTML5</th></tr>
+          <tr><td>Requires Flash for audio/video</td><td>Native &lt;audio&gt; &amp; &lt;video&gt; tags</td></tr>
+          <tr><td>No semantic tags (only &lt;div&gt;)</td><td>Semantic tags: &lt;header&gt;, &lt;nav&gt;, &lt;section&gt;, &lt;footer&gt;</td></tr>
+          <tr><td>No localStorage or sessionStorage</td><td>Full Web Storage API</td></tr>
+          <tr><td>No canvas drawing</td><td>&lt;canvas&gt; tag for 2D/3D drawing</td></tr>
+          <tr><td>Loose doctype declaration</td><td>Simple: &lt;!DOCTYPE html&gt;</td></tr>
+          <tr><td>No geolocation support</td><td>Built-in Geolocation API</td></tr>
+        </table>
+        <h3 class="sub">Advantages of HTML5</h3>
+        <ul class="answer-list">
+          <li>Built-in multimedia support (no plugins needed)</li>
+          <li>Semantic tags improve readability and SEO</li>
+          <li>Offline storage via localStorage/sessionStorage</li>
+          <li>Better form controls (date, range, email, color pickers)</li>
+          <li>Canvas &amp; SVG for graphics without Flash</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the difference between HTML and XHTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>XHTML</strong> (Extensible HyperText Markup Language) is a stricter, XML-based version of HTML. It enforces rules that HTML is lenient about.</p>
+        <table class="compare-table">
+          <tr><th>HTML</th><th>XHTML</th></tr>
+          <tr><td>Tags can be lowercase or UPPERCASE</td><td>All tags must be lowercase</td></tr>
+          <tr><td>Tags don't need to be closed: &lt;br&gt;</td><td>All tags must be self-closed: &lt;br /&gt;</td></tr>
+          <tr><td>Attribute values don't need quotes</td><td>All attribute values must be quoted</td></tr>
+          <tr><td>Browser forgives errors</td><td>One error breaks the whole page</td></tr>
+          <tr><td>Loose parsing</td><td>Strict XML parsing</td></tr>
+        </table>
+        <div class="note">💡 In modern development, HTML5 has replaced XHTML. You rarely write XHTML today, but interviewers ask about it to test your understanding of standards.</div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the role of DOCTYPE in HTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>DOCTYPE</strong> (Document Type Declaration) is the very first line in an HTML file. It tells the browser which version of HTML you're using so it can render the page correctly. Without it, the browser may enter "quirks mode" — an old compatibility mode where CSS and layout behave unpredictably.</p>
+        <pre><span class="cmt">&lt;!-- HTML5 DOCTYPE (modern, simple) --&gt;</span>
+<span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="val">"en"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>...
+  <span class="tag">&lt;body&gt;</span>...</pre>
+        <ul class="answer-list">
+          <li>Not an HTML tag — it's an instruction to the browser</li>
+          <li>Must be the very first thing in the file (before &lt;html&gt;)</li>
+          <li>HTML5 DOCTYPE is simply <span class="inline-code">&lt;!DOCTYPE html&gt;</span> — no version number needed</li>
+          <li>Older HTML4 had long complex DOCTYPE strings</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What if you remove DOCTYPE html from your HTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">If you remove DOCTYPE, the browser switches to <strong>Quirks Mode</strong> — a backward-compatibility mode that mimics old browser behaviour from the 1990s. This causes:</p>
+        <ul class="answer-list">
+          <li>CSS box model behaves differently (widths include padding in quirks mode)</li>
+          <li>Layout inconsistencies across browsers (Chrome, Firefox, IE all differ)</li>
+          <li>Fonts and line heights render differently</li>
+          <li>Some HTML5 features may not work correctly</li>
+        </ul>
+        <div class="tip">✅ Always include <span class="inline-code">&lt;!DOCTYPE html&gt;</span> as the first line. It's a one-liner that saves you from hours of debugging.</div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. Difference between &lt;head&gt; &amp; &lt;body&gt; in HTML? Where to place JS link reference?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>&lt;head&gt;</th><th>&lt;body&gt;</th></tr>
+          <tr><td>Not visible to the user</td><td>Everything visible on screen</td></tr>
+          <tr><td>Contains metadata: title, charset, viewport</td><td>Contains content: text, images, forms, videos</td></tr>
+          <tr><td>Links to CSS stylesheets</td><td>Links to JavaScript (ideally)</td></tr>
+          <tr><td>Meta tags, favicon, Open Graph tags</td><td>All HTML elements the user sees</td></tr>
+        </table>
+        <h3 class="sub">Where to place JavaScript?</h3>
+        <pre><span class="cmt">&lt;!-- ✅ Best practice: Just before &lt;/body&gt; --&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>Hello<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"app.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+
+<span class="cmt">&lt;!-- OR in &lt;head&gt; with defer attribute --&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"app.js"</span> <span class="atr">defer</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+        <div class="note">💡 Placing JS before &lt;/body&gt; ensures the HTML loads first, then JS runs. If you place it in &lt;head&gt; without <span class="inline-code">defer</span>, JS blocks page rendering.</div>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the Title Tag in HTML? What are the 4 advantages of the Title tag?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">The <strong>&lt;title&gt;</strong> tag defines the title of the web page. It appears in the browser tab and is used by search engines. It lives inside &lt;head&gt;.</p>
+        <pre><span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;title&gt;</span>My Portfolio - Home<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+        <h3 class="sub">4 Advantages</h3>
+        <ul class="answer-list">
+          <li><strong>Browser Tab:</strong> Shows the page name so users can identify the tab</li>
+          <li><strong>SEO:</strong> Search engines (Google) use the title as the clickable headline in search results</li>
+          <li><strong>Bookmarks:</strong> When you bookmark a page, the title becomes the bookmark name</li>
+          <li><strong>Accessibility:</strong> Screen readers announce the title first, helping visually impaired users</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are Meta Tags? What are the 5 types of meta tags?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>Meta tags</strong> live inside &lt;head&gt; and provide metadata (information about the page) to browsers, search engines, and social media platforms. They are self-closing and invisible to users.</p>
+        <pre><span class="cmt">&lt;!-- 1. Charset - defines character encoding --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- 2. Viewport - makes site responsive on mobile --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"viewport"</span> <span class="atr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- 3. Description - shown in Google search results --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"description"</span> <span class="atr">content</span>=<span class="val">"Best portfolio site for web developers"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- 4. Keywords - for SEO (less important now) --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"keywords"</span> <span class="atr">content</span>=<span class="val">"HTML, CSS, JavaScript, React"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- 5. Author --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"author"</span> <span class="atr">content</span>=<span class="val">"Rahul Sharma"</span><span class="tag">&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="section-label">HTML Elements &amp; Tags – Part I</div>
+
+    <!-- Q8 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are HTML elements? What is the difference between Element &amp; Tag?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">An <strong>HTML Element</strong> is the complete unit: opening tag + content + closing tag. A <strong>Tag</strong> is just the marker itself (the angle-bracket part).</p>
+        <pre><span class="cmt">&lt;!-- TAG = just &lt;p&gt; or &lt;/p&gt; --&gt;</span>
+<span class="cmt">&lt;!-- ELEMENT = the whole thing below --&gt;</span>
+
+<span class="tag">&lt;p&gt;</span>This is my paragraph content.<span class="tag">&lt;/p&gt;</span>
+<span class="cmt">^opening tag   ^content             ^closing tag</span>
+<span class="cmt">|_____________ the entire ELEMENT ______________|</span></pre>
+        <ul class="answer-list">
+          <li>Some elements are self-closing (void elements): <span class="inline-code">&lt;br&gt;</span>, <span class="inline-code">&lt;img&gt;</span>, <span class="inline-code">&lt;input&gt;</span>, <span class="inline-code">&lt;hr&gt;</span></li>
+          <li>Elements can be nested inside other elements</li>
+          <li>Every tag has a purpose — never use a tag just for its visual appearance</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are the roles and uses of the &lt;div&gt; element in HTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">A <strong>&lt;div&gt;</strong> (division) is a generic block-level container with no semantic meaning. It's used purely for layout, grouping, and styling purposes.</p>
+        <pre><span class="cmt">&lt;!-- Grouping elements for layout --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"card"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>Product Title<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Product description here<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;button&gt;</span>Add to Cart<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- Used as flex/grid containers --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"container"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col"</span><span class="tag">&gt;</span>Left<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col"</span><span class="tag">&gt;</span>Right<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        <div class="tip">✅ Use semantic tags (&lt;section&gt;, &lt;article&gt;, &lt;nav&gt;) when the content has meaning. Use &lt;div&gt; only when you just need a wrapper with no semantic meaning.</div>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the difference between &lt;div&gt; and &lt;span&gt; element?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>&lt;div&gt;</th><th>&lt;span&gt;</th></tr>
+          <tr><td>Block-level element</td><td>Inline element</td></tr>
+          <tr><td>Starts on a new line, takes full width</td><td>Stays in the flow of text</td></tr>
+          <tr><td>Used for layout containers / sections</td><td>Used for styling a small part of text</td></tr>
+          <tr><td>Can contain block + inline elements</td><td>Should only contain inline content</td></tr>
+        </table>
+        <pre><span class="cmt">&lt;!-- div creates a block section --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"box"</span><span class="tag">&gt;</span>This takes up the full line<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- span wraps part of text inline --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Price is <span class="tag">&lt;span</span> <span class="atr">style</span>=<span class="val">"color:red"</span><span class="tag">&gt;</span>₹999<span class="tag">&lt;/span&gt;</span> only!<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the role of &lt;p&gt;, &lt;a&gt;, &lt;br&gt;, &lt;hr&gt;, &lt;em&gt;, &lt;img&gt;, &lt;input&gt; &amp; &lt;button&gt; elements?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- p: paragraph of text --&gt;</span>
+<span class="tag">&lt;p&gt;</span>This is a paragraph.<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">&lt;!-- a: anchor/hyperlink --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"https://google.com"</span> <span class="atr">target</span>=<span class="val">"_blank"</span><span class="tag">&gt;</span>Go to Google<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- br: line break (no closing tag) --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Line one<span class="tag">&lt;br&gt;</span>Line two<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">&lt;!-- hr: horizontal rule/divider --&gt;</span>
+<span class="tag">&lt;hr&gt;</span>
+
+<span class="cmt">&lt;!-- em: emphasis (italic, also semantic) --&gt;</span>
+<span class="tag">&lt;p&gt;</span>This word is <span class="tag">&lt;em&gt;</span>important<span class="tag">&lt;/em&gt;</span>.<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">&lt;!-- img: embed image --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"photo.jpg"</span> <span class="atr">alt</span>=<span class="val">"A description"</span> <span class="atr">width</span>=<span class="val">"300"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- input: form field (many types) --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"text"</span> <span class="atr">placeholder</span>=<span class="val">"Enter name"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- button: clickable button --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>Submit<span class="tag">&lt;/button&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the role of &lt;header&gt;, &lt;main&gt;, &lt;section&gt;, &lt;footer&gt; &amp; &lt;address&gt; elements?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">These are <strong>semantic HTML5 elements</strong>. They tell both the browser and the developer what role each area of the page plays.</p>
+        <pre><span class="tag">&lt;header&gt;</span>
+  <span class="cmt">&lt;!-- Site logo, navbar, site title --&gt;</span>
+  <span class="tag">&lt;nav&gt;</span>...<span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
+
+<span class="tag">&lt;main&gt;</span>
+  <span class="cmt">&lt;!-- Primary content of the page (only ONE per page) --&gt;</span>
+  <span class="tag">&lt;section&gt;</span>
+    <span class="cmt">&lt;!-- A thematic group of content, e.g. "About Us" --&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>About Us<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;p&gt;</span>We are a team...<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/section&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="tag">&lt;footer&gt;</span>
+  <span class="cmt">&lt;!-- Copyright, contact, social links --&gt;</span>
+  <span class="tag">&lt;address&gt;</span>
+    <span class="cmt">&lt;!-- Contact info for nearest article/site --&gt;</span>
+    Email: <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"mailto:me@gmail.com"</span><span class="tag">&gt;</span>me@gmail.com<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;/address&gt;</span>
+<span class="tag">&lt;/footer&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the role of Heading tags in HTML? How does it impact SEO?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">HTML has 6 levels of headings: <strong>&lt;h1&gt;</strong> to <strong>&lt;h6&gt;</strong>. They create a document outline — h1 is most important, h6 is least.</p>
+        <pre><span class="tag">&lt;h1&gt;</span>Main Page Title (use ONCE per page)<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;h2&gt;</span>Major Section Heading<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;h3&gt;</span>Sub-section Heading<span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;h4&gt;</span>Sub-sub Heading<span class="tag">&lt;/h4&gt;</span></pre>
+        <h3 class="sub">SEO Impact</h3>
+        <ul class="answer-list">
+          <li>Google reads heading tags to understand your page structure</li>
+          <li><span class="inline-code">&lt;h1&gt;</span> carries the most SEO weight — should contain your main keyword</li>
+          <li>Proper heading hierarchy helps Google index your content correctly</li>
+          <li>Don't skip levels (don't go h1 → h4) — Google notices</li>
+          <li>Screen readers use headings for navigation — also improves accessibility</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the difference between &lt;section&gt; &amp; &lt;article&gt; elements?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>&lt;section&gt;</th><th>&lt;article&gt;</th></tr>
+          <tr><td>A thematic group of content on the page</td><td>Independent, self-contained content</td></tr>
+          <tr><td>Needs the page for context</td><td>Can be taken out and still make sense</td></tr>
+          <tr><td>Example: "Our Services" section</td><td>Example: A blog post, news article, review</td></tr>
+          <tr><td>Usually has a heading</td><td>Also usually has a heading</td></tr>
+        </table>
+        <pre><span class="cmt">&lt;!-- section: part of the page --&gt;</span>
+<span class="tag">&lt;section&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>Our Services<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p&gt;</span>We offer web development...<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/section&gt;</span>
+
+<span class="cmt">&lt;!-- article: standalone content --&gt;</span>
+<span class="tag">&lt;article&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>How to Learn CSS in 30 Days<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Start with the box model...<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/article&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="section-label">HTML Elements &amp; Tags – Part II</div>
+
+    <!-- Q15 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are Root, Parent, Child &amp; Nested elements?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">HTML elements have a family tree structure (called the DOM tree):</p>
+        <pre><span class="tag">&lt;html&gt;</span>           <span class="cmt">&lt;!-- ROOT element --&gt;</span>
+  <span class="tag">&lt;body&gt;</span>         <span class="cmt">&lt;!-- PARENT of div --&gt;</span>
+    <span class="tag">&lt;div&gt;</span>        <span class="cmt">&lt;!-- CHILD of body, PARENT of p --&gt;</span>
+      <span class="tag">&lt;p&gt;</span>        <span class="cmt">&lt;!-- CHILD of div (NESTED element) --&gt;</span>
+        <span class="tag">&lt;span&gt;</span>   <span class="cmt">&lt;!-- NESTED inside p (deeply nested) --&gt;</span>
+        <span class="tag">&lt;/span&gt;</span>
+      <span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        <ul class="answer-list">
+          <li><strong>Root:</strong> The top-most element — always <span class="inline-code">&lt;html&gt;</span></li>
+          <li><strong>Parent:</strong> Any element that contains another element inside it</li>
+          <li><strong>Child:</strong> An element directly inside a parent element</li>
+          <li><strong>Nested:</strong> Elements placed inside other elements (any depth)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are Empty Elements?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>Empty elements</strong> (also called void elements) are HTML tags that have NO closing tag and NO content between tags. They are self-contained.</p>
+        <pre><span class="cmt">&lt;!-- These are ALL empty/void elements --&gt;</span>
+<span class="tag">&lt;br&gt;</span>       <span class="cmt">&lt;!-- line break --&gt;</span>
+<span class="tag">&lt;hr&gt;</span>       <span class="cmt">&lt;!-- horizontal rule --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"photo.jpg"</span> <span class="atr">alt</span>=<span class="val">"photo"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"text"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span> <span class="atr">href</span>=<span class="val">"style.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span></pre>
+        <div class="note">💡 In XHTML you'd write <span class="inline-code">&lt;br /&gt;</span> with a self-closing slash. In HTML5, both <span class="inline-code">&lt;br&gt;</span> and <span class="inline-code">&lt;br /&gt;</span> are valid.</div>
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are Semantic Elements in HTML? Is div a semantic element?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>Semantic elements</strong> are tags that carry meaning about the content they contain. They tell the browser AND the developer what the content IS, not just how to display it.</p>
+        <table class="compare-table">
+          <tr><th>Non-Semantic (no meaning)</th><th>Semantic (has meaning)</th></tr>
+          <tr><td>&lt;div&gt;</td><td>&lt;header&gt;</td></tr>
+          <tr><td>&lt;span&gt;</td><td>&lt;nav&gt;</td></tr>
+          <tr><td></td><td>&lt;main&gt;</td></tr>
+          <tr><td></td><td>&lt;section&gt;</td></tr>
+          <tr><td></td><td>&lt;article&gt;</td></tr>
+          <tr><td></td><td>&lt;aside&gt;</td></tr>
+          <tr><td></td><td>&lt;footer&gt;</td></tr>
+        </table>
+        <div class="note">💡 <strong>Is &lt;div&gt; semantic? NO.</strong> &lt;div&gt; means nothing — it's just a box. Always prefer semantic elements when you know the role of the content.</div>
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. Can HTML tags be written in Uppercase?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">In <strong>HTML5</strong>: Yes, both uppercase and lowercase tags are valid. The browser accepts both. In <strong>XHTML</strong>: No — all tags must be lowercase.</p>
+        <pre><span class="cmt">&lt;!-- Both work in HTML5 --&gt;</span>
+<span class="tag">&lt;P&gt;</span>This works<span class="tag">&lt;/P&gt;</span>
+<span class="tag">&lt;p&gt;</span>This also works<span class="tag">&lt;/p&gt;</span></pre>
+        <div class="tip">✅ Best practice: Always write HTML tags in <strong>lowercase</strong>. It's the modern standard, more readable, and compatible with XHTML.</div>
+      </div>
+    </div>
+
+    <!-- Q19 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are the 3 differences between Block-Level and Inline Elements?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Block-Level</th><th>Inline</th></tr>
+          <tr><td>1. Starts on a NEW line</td><td>1. Stays on the SAME line as surrounding content</td></tr>
+          <tr><td>2. Takes FULL width available</td><td>2. Takes only as much width as its content needs</td></tr>
+          <tr><td>3. Can contain block + inline elements</td><td>3. Should only contain text or other inline elements</td></tr>
+        </table>
+        <pre><span class="cmt">&lt;!-- block: takes full width, forces new line --&gt;</span>
+<span class="tag">&lt;div&gt;</span>I am block<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;p&gt;</span>I am also block<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">&lt;!-- inline: stays in the same line --&gt;</span>
+<span class="tag">&lt;p&gt;</span>This has <span class="tag">&lt;span&gt;</span>inline<span class="tag">&lt;/span&gt;</span> and <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"#"</span><span class="tag">&gt;</span>link<span class="tag">&lt;/a&gt;</span> inside.<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. List all Block-Level &amp; Inline Elements in HTML.</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Block-Level Elements</th><th>Inline Elements</th></tr>
+          <tr><td>&lt;div&gt;, &lt;p&gt;, &lt;h1&gt;–&lt;h6&gt;</td><td>&lt;span&gt;, &lt;a&gt;, &lt;strong&gt;</td></tr>
+          <tr><td>&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;</td><td>&lt;em&gt;, &lt;b&gt;, &lt;i&gt;</td></tr>
+          <tr><td>&lt;table&gt;, &lt;form&gt;</td><td>&lt;img&gt;, &lt;input&gt;, &lt;button&gt;</td></tr>
+          <tr><td>&lt;header&gt;, &lt;footer&gt;, &lt;main&gt;</td><td>&lt;label&gt;, &lt;select&gt;</td></tr>
+          <tr><td>&lt;section&gt;, &lt;article&gt;, &lt;nav&gt;</td><td>&lt;code&gt;, &lt;small&gt;, &lt;br&gt;</td></tr>
+          <tr><td>&lt;blockquote&gt;, &lt;pre&gt;, &lt;hr&gt;</td><td>&lt;abbr&gt;, &lt;cite&gt;, &lt;sup&gt;, &lt;sub&gt;</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-label">HTML Attributes</div>
+
+    <!-- Q21 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are HTML Attributes? What are the Types of HTML attributes?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>Attributes</strong> provide additional information about an HTML element. They are always written in the opening tag as name="value" pairs.</p>
+        <pre><span class="cmt">&lt;!-- General syntax --&gt;</span>
+<span class="tag">&lt;tagname</span> <span class="atr">attribute</span>=<span class="val">"value"</span><span class="tag">&gt;</span>content<span class="tag">&lt;/tagname&gt;</span>
+
+<span class="cmt">&lt;!-- Real examples --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"photo.jpg"</span> <span class="atr">alt</span>=<span class="val">"Profile photo"</span> <span class="atr">width</span>=<span class="val">"200"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"https://google.com"</span> <span class="atr">target</span>=<span class="val">"_blank"</span><span class="tag">&gt;</span>Link<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"email"</span> <span class="atr">placeholder</span>=<span class="val">"Enter email"</span> <span class="atr">required</span><span class="tag">&gt;</span></pre>
+        <h3 class="sub">Types of Attributes</h3>
+        <ul class="answer-list">
+          <li><strong>Global attributes:</strong> Work on any element — id, class, style, title, hidden, data-*</li>
+          <li><strong>Element-specific:</strong> src (img), href (a), action (form), for (label)</li>
+          <li><strong>Boolean attributes:</strong> Just their presence means true — disabled, required, checked, readonly</li>
+          <li><strong>Event attributes:</strong> onclick, onchange, onsubmit, onload</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q22 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are the Id, Style &amp; Class attributes? When to use what?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Attribute</th><th>Purpose</th><th>When to Use</th></tr>
+          <tr><td><strong>id</strong></td><td>Unique identifier for ONE element</td><td>When you need to target a specific single element in CSS or JS</td></tr>
+          <tr><td><strong>class</strong></td><td>Group identifier for MULTIPLE elements</td><td>When multiple elements share the same style</td></tr>
+          <tr><td><strong>style</strong></td><td>Inline CSS directly on the element</td><td>For quick one-off overrides (avoid overusing)</td></tr>
+        </table>
+        <pre><span class="cmt">&lt;!-- id: unique, used once --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">id</span>=<span class="val">"main-header"</span><span class="tag">&gt;</span>Only one header<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- class: reusable across many elements --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"btn-primary"</span><span class="tag">&gt;</span>Submit<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"btn-primary"</span><span class="tag">&gt;</span>Cancel<span class="tag">&lt;/button&gt;</span>
+
+<span class="cmt">&lt;!-- style: inline, use sparingly --&gt;</span>
+<span class="tag">&lt;p</span> <span class="atr">style</span>=<span class="val">"color: red; font-size: 18px;"</span><span class="tag">&gt;</span>Error message<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- Q23 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What will happen if two elements have the same ids?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">It is a <strong>violation of HTML rules</strong>. IDs must be unique per page. However, browsers are forgiving — they won't throw an error. But the consequences are serious:</p>
+        <pre><span class="cmt">&lt;!-- BAD - duplicate IDs --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">id</span>=<span class="val">"box"</span><span class="tag">&gt;</span>First<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">id</span>=<span class="val">"box"</span><span class="tag">&gt;</span>Second<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">// In JavaScript - getElementById only returns FIRST match</span>
+<span class="fn">document</span>.<span class="fn">getElementById</span>(<span class="str">'box'</span>); <span class="cmt">// only gets "First"</span>
+
+<span class="cmt">// querySelectorAll('#box') may behave inconsistently</span></pre>
+        <ul class="answer-list">
+          <li>CSS will style only the first element with that ID</li>
+          <li>JavaScript <span class="inline-code">getElementById</span> only finds the first one</li>
+          <li>Accessibility tools get confused</li>
+          <li>HTML validation will fail</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q24 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. How to specify Multiple Classes for a single element? What is the style precedence?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">Separate multiple class names with a <strong>space</strong> inside the class attribute:</p>
+        <pre><span class="cmt">&lt;!-- Multiple classes on one element --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"card featured large shadow"</span><span class="tag">&gt;</span>
+  This div has 4 classes applied
+<span class="tag">&lt;/div&gt;</span></pre>
+        <h3 class="sub">Style Precedence (Specificity)</h3>
+        <ul class="answer-list">
+          <li><strong>Highest:</strong> <span class="inline-code">!important</span> always wins</li>
+          <li><strong>2nd:</strong> Inline style (style="...")</li>
+          <li><strong>3rd:</strong> ID selector (#myId)</li>
+          <li><strong>4th:</strong> Class selector (.myClass)</li>
+          <li><strong>5th (lowest):</strong> Element selector (p, div, h1)</li>
+        </ul>
+        <div class="note">💡 When two rules have equal specificity, the one that appears LAST in the CSS file wins.</div>
+      </div>
+    </div>
+
+    <!-- Q25 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are Data Attributes in HTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>Data attributes</strong> let you store custom data directly on HTML elements. They start with <span class="inline-code">data-</span> and you can name them anything.</p>
+        <pre><span class="cmt">&lt;!-- Storing custom data on elements --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">data-user-id</span>=<span class="val">"42"</span> <span class="atr">data-action</span>=<span class="val">"delete"</span><span class="tag">&gt;</span>
+  Delete User
+<span class="tag">&lt;/button&gt;</span>
+
+<span class="tag">&lt;div</span> <span class="atr">data-product-id</span>=<span class="val">"P001"</span> <span class="atr">data-price</span>=<span class="val">"999"</span><span class="tag">&gt;</span>iPhone<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">// Access in JavaScript via dataset</span>
+<span class="kw">const</span> btn = <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="str">'button'</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(btn.dataset.userId);  <span class="cmt">// "42"</span>
+<span class="fn">console</span>.<span class="fn">log</span>(btn.dataset.action);  <span class="cmt">// "delete"</span></pre>
+        <div class="tip">✅ Very useful in real projects! Instead of making extra API calls or storing data in JavaScript variables, you can embed data right in the HTML and read it with JS.</div>
+      </div>
+    </div>
+
+    <div class="section-label">HTML Links &amp; Navigation</div>
+
+    <!-- Q26 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are the 5 Types of Links in HTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- 1. External link (absolute URL) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"https://google.com"</span><span class="tag">&gt;</span>Google<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- 2. Internal link (relative URL) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"/about.html"</span><span class="tag">&gt;</span>About Page<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- 3. Anchor link (jump within same page) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"#contact"</span><span class="tag">&gt;</span>Go to Contact Section<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">id</span>=<span class="val">"contact"</span><span class="tag">&gt;</span>Contact Section<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- 4. Email link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"mailto:hello@gmail.com"</span><span class="tag">&gt;</span>Email Me<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- 5. Phone link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"tel:+919876543210"</span><span class="tag">&gt;</span>Call Me<span class="tag">&lt;/a&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- Q27 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the difference between Absolute and Relative URLs?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Absolute URL</th><th>Relative URL</th></tr>
+          <tr><td>Full URL including protocol and domain</td><td>Partial path relative to current page</td></tr>
+          <tr><td>Works from anywhere on the web</td><td>Only works within the same site</td></tr>
+          <tr><td>https://mysite.com/about.html</td><td>/about.html or ../about.html</td></tr>
+          <tr><td>Used for external links</td><td>Used for internal site navigation</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q28 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the purpose of the &lt;nav&gt; element? / Fragment Identifier? / &lt;base&gt; element? / External stylesheet? / Open link in new tab? / Email link?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- nav: semantic navigation container --&gt;</span>
+<span class="tag">&lt;nav&gt;</span>
+  <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"/"</span><span class="tag">&gt;</span>Home<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"/about"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/nav&gt;</span>
+
+<span class="cmt">&lt;!-- Fragment identifier: links to element with matching id --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"#section2"</span><span class="tag">&gt;</span>Jump to Section 2<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;h2</span> <span class="atr">id</span>=<span class="val">"section2"</span><span class="tag">&gt;</span>Section 2<span class="tag">&lt;/h2&gt;</span>
+
+<span class="cmt">&lt;!-- base: sets default URL and target for all links on page --&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;base</span> <span class="atr">href</span>=<span class="val">"https://mysite.com/"</span> <span class="atr">target</span>=<span class="val">"_blank"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+
+<span class="cmt">&lt;!-- External stylesheet link --&gt;</span>
+<span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span> <span class="atr">href</span>=<span class="val">"style.css"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- Open in new tab --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"https://google.com"</span> <span class="atr">target</span>=<span class="val">"_blank"</span> <span class="atr">rel</span>=<span class="val">"noopener noreferrer"</span><span class="tag">&gt;</span>Google<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Email link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"mailto:hello@gmail.com?subject=Hello&amp;body=Hi there"</span><span class="tag">&gt;</span>Email Me<span class="tag">&lt;/a&gt;</span></pre>
+        <div class="note">💡 Always add <span class="inline-code">rel="noopener noreferrer"</span> when using target="_blank" for security — it prevents the new tab from accessing your page via <span class="inline-code">window.opener</span>.</div>
+      </div>
+    </div>
+
+    <div class="section-label">HTML Lists &amp; Tables</div>
+
+    <!-- Q29 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are the different Types of Lists in HTML? What is a Nested List?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- 1. Unordered list (bullets) --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>HTML<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>CSS<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cmt">&lt;!-- 2. Ordered list (numbered) --&gt;</span>
+<span class="tag">&lt;ol&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Step one<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Step two<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="cmt">&lt;!-- 3. Definition list (term + definition) --&gt;</span>
+<span class="tag">&lt;dl&gt;</span>
+  <span class="tag">&lt;dt&gt;</span>HTML<span class="tag">&lt;/dt&gt;</span>
+  <span class="tag">&lt;dd&gt;</span>HyperText Markup Language<span class="tag">&lt;/dd&gt;</span>
+<span class="tag">&lt;/dl&gt;</span>
+
+<span class="cmt">&lt;!-- 4. Nested list (list inside a list) --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Frontend
+    <span class="tag">&lt;ul&gt;</span>
+      <span class="tag">&lt;li&gt;</span>HTML<span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;li&gt;</span>CSS<span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+  <span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Backend<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- Q30 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are &lt;table&gt;, &lt;tr&gt;, &lt;th&gt;, &lt;td&gt; elements? Advantages &amp; Disadvantages? colspan? Border?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- Full table structure --&gt;</span>
+<span class="tag">&lt;table</span> <span class="atr">border</span>=<span class="val">"1"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;thead&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>                          <span class="cmt">&lt;!-- tr = table row --&gt;</span>
+      <span class="tag">&lt;th&gt;</span>Name<span class="tag">&lt;/th&gt;</span>               <span class="cmt">&lt;!-- th = table header (bold, centered) --&gt;</span>
+      <span class="tag">&lt;th</span> <span class="atr">colspan</span>=<span class="val">"2"</span><span class="tag">&gt;</span>Scores<span class="tag">&lt;/th&gt;</span> <span class="cmt">&lt;!-- colspan spans 2 columns --&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/thead&gt;</span>
+  <span class="tag">&lt;tbody&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>Rahul<span class="tag">&lt;/td&gt;</span>              <span class="cmt">&lt;!-- td = table data cell --&gt;</span>
+      <span class="tag">&lt;td&gt;</span>85<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>90<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tbody&gt;</span>
+<span class="tag">&lt;/table&gt;</span>
+
+<span class="cmt">/* Best way to add border via CSS */</span>
+<span class="cls">table</span>, <span class="cls">th</span>, <span class="cls">td</span> {
+  <span class="atr">border</span>: <span class="num">1px</span> solid <span class="val">#ccc</span>;
+  <span class="atr">border-collapse</span>: <span class="val">collapse</span>; <span class="cmt">/* merges double borders */</span>
+}</pre>
+        <table class="compare-table">
+          <tr><th>Advantages of Tables</th><th>Disadvantages</th></tr>
+          <tr><td>Great for structured data (like Excel)</td><td>Not good for layout (use Flexbox/Grid)</td></tr>
+          <tr><td>Easy to create rows/columns</td><td>Not responsive by default</td></tr>
+          <tr><td>Built-in colspan/rowspan for merging</td><td>Verbose HTML — lots of tags</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-label">HTML Images &amp; Multimedia</div>
+
+    <!-- Q31 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. How to embed Image, Video &amp; Audio in HTML? JPEG vs PNG? alt attribute? autoplay &amp; loop?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- Image with alt --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"banner.jpg"</span> <span class="atr">alt</span>=<span class="val">"Website banner showing team"</span> <span class="atr">width</span>=<span class="val">"800"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- Video with multiple sources (fallback) --&gt;</span>
+<span class="tag">&lt;video</span> <span class="atr">controls</span> <span class="atr">autoplay</span> <span class="atr">loop</span> <span class="atr">muted</span> <span class="atr">width</span>=<span class="val">"600"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="atr">src</span>=<span class="val">"video.mp4"</span> <span class="atr">type</span>=<span class="val">"video/mp4"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="atr">src</span>=<span class="val">"video.ogg"</span> <span class="atr">type</span>=<span class="val">"video/ogg"</span><span class="tag">&gt;</span>
+  Your browser does not support video.
+<span class="tag">&lt;/video&gt;</span>
+
+<span class="cmt">&lt;!-- Audio --&gt;</span>
+<span class="tag">&lt;audio</span> <span class="atr">controls</span> <span class="atr">loop</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="atr">src</span>=<span class="val">"song.mp3"</span> <span class="atr">type</span>=<span class="val">"audio/mpeg"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/audio&gt;</span></pre>
+        <table class="compare-table">
+          <tr><th>JPEG</th><th>PNG</th></tr>
+          <tr><td>Lossy compression (smaller file)</td><td>Lossless (larger file, better quality)</td></tr>
+          <tr><td>No transparency support</td><td>Supports transparent backgrounds</td></tr>
+          <tr><td>Best for photos, backgrounds</td><td>Best for logos, icons, screenshots</td></tr>
+        </table>
+        <div class="note">💡 <strong>Why multiple &lt;source&gt; elements in video?</strong> Different browsers support different video formats. By providing mp4 AND ogg/webm, you ensure the video plays in all browsers. Browser picks the first one it supports.</div>
+        <div class="tip">✅ <strong>Why is alt important?</strong> If the image fails to load, alt text shows. Screen readers read it for visually impaired users. Search engines use it for image SEO. It's also required for accessibility standards (WCAG).</div>
+      </div>
+    </div>
+
+    <div class="section-label">HTML Forms</div>
+
+    <!-- Q32 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are HTML Forms and what are its advantages? Form Elements &amp; Attributes? Validate empty field? Textarea? Input Types? Radio/Checkbox? Select?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">A <strong>form</strong> collects user input and sends it to a server. Without forms, you can't have login, signup, search, or checkout pages.</p>
+        <pre><span class="cmt">&lt;!-- Complete form example --&gt;</span>
+<span class="tag">&lt;form</span> <span class="atr">action</span>=<span class="val">"/submit"</span> <span class="atr">method</span>=<span class="val">"POST"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Text input --&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="val">"name"</span><span class="tag">&gt;</span>Name:<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"text"</span> <span class="atr">id</span>=<span class="val">"name"</span> <span class="atr">name</span>=<span class="val">"name"</span> <span class="atr">required</span> <span class="atr">placeholder</span>=<span class="val">"Enter name"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Textarea --&gt;</span>
+  <span class="tag">&lt;textarea</span> <span class="atr">name</span>=<span class="val">"message"</span> <span class="atr">rows</span>=<span class="val">"4"</span> <span class="atr">cols</span>=<span class="val">"40"</span><span class="tag">&gt;</span>Default text<span class="tag">&lt;/textarea&gt;</span>
+
+  <span class="cmt">&lt;!-- Radio buttons (grouped by same name) --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"radio"</span> <span class="atr">name</span>=<span class="val">"gender"</span> <span class="atr">value</span>=<span class="val">"male"</span><span class="tag">&gt;</span> Male
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"radio"</span> <span class="atr">name</span>=<span class="val">"gender"</span> <span class="atr">value</span>=<span class="val">"female"</span><span class="tag">&gt;</span> Female
+
+  <span class="cmt">&lt;!-- Checkboxes --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"checkbox"</span> <span class="atr">name</span>=<span class="val">"skills"</span> <span class="atr">value</span>=<span class="val">"html"</span><span class="tag">&gt;</span> HTML
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"checkbox"</span> <span class="atr">name</span>=<span class="val">"skills"</span> <span class="atr">value</span>=<span class="val">"css"</span><span class="tag">&gt;</span> CSS
+
+  <span class="cmt">&lt;!-- Dropdown --&gt;</span>
+  <span class="tag">&lt;select</span> <span class="atr">name</span>=<span class="val">"city"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"mumbai"</span><span class="tag">&gt;</span>Mumbai<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"delhi"</span><span class="tag">&gt;</span>Delhi<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;/select&gt;</span>
+
+  <span class="cmt">&lt;!-- Submit --&gt;</span>
+  <span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>Submit Form<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
+
+<span class="cmt">// Validate empty field in JavaScript</span>
+<span class="kw">function</span> <span class="fn">validate</span>() {
+  <span class="kw">const</span> name = <span class="fn">document</span>.<span class="fn">getElementById</span>(<span class="str">'name'</span>).value;
+  <span class="kw">if</span> (name.trim() === <span class="str">''</span>) {
+    <span class="fn">alert</span>(<span class="str">'Name cannot be empty!'</span>);
+    <span class="kw">return false</span>;
+  }
+  <span class="kw">return true</span>;
+}</pre>
+        <h3 class="sub">All Input Types</h3>
+        <ul class="answer-list">
+          <li>text, password, email, number, tel, url</li>
+          <li>date, time, datetime-local, month, week</li>
+          <li>radio, checkbox, range, color, file</li>
+          <li>submit, reset, button, hidden, image, search</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Best Practices, SEO &amp; Responsiveness</div>
+
+    <!-- Q33 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. Top 10 Best Practices for writing HTML? HTML5 Boilerplate? Performance Optimization? SEO? Deployment Steps? Responsive Design?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <h3 class="sub">Top 10 HTML Best Practices</h3>
+        <ul class="answer-list">
+          <li>Always start with <span class="inline-code">&lt;!DOCTYPE html&gt;</span></li>
+          <li>Use semantic HTML elements (not just divs everywhere)</li>
+          <li>Always include alt text on images</li>
+          <li>Keep HTML structure clean and well-indented</li>
+          <li>Use lowercase tag and attribute names</li>
+          <li>Close all tags properly</li>
+          <li>Use external CSS (never inline styles everywhere)</li>
+          <li>Use heading hierarchy correctly (h1 → h2 → h3)</li>
+          <li>Include viewport meta tag for mobile</li>
+          <li>Validate your HTML at validator.w3.org</li>
+        </ul>
+        <pre><span class="cmt">&lt;!-- HTML5 Boilerplate --&gt;</span>
+<span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="val">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"viewport"</span> <span class="atr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"description"</span> <span class="atr">content</span>=<span class="val">"Page description for SEO"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Page Title<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span> <span class="atr">href</span>=<span class="val">"style.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+  <span class="tag">&lt;header&gt;</span>...<span class="tag">&lt;/header&gt;</span>
+  <span class="tag">&lt;main&gt;</span>...<span class="tag">&lt;/main&gt;</span>
+  <span class="tag">&lt;footer&gt;</span>...<span class="tag">&lt;/footer&gt;</span>
+
+  <span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"app.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+        <h3 class="sub">3 Things for Responsive HTML</h3>
+        <ul class="answer-list">
+          <li><strong>Viewport meta tag:</strong> <span class="inline-code">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></li>
+          <li><strong>Fluid images:</strong> <span class="inline-code">img { max-width: 100%; height: auto; }</span></li>
+          <li><strong>CSS Media Queries:</strong> Different styles for different screen sizes</li>
+        </ul>
+        <h3 class="sub">5 HTML SEO Best Practices</h3>
+        <ul class="answer-list">
+          <li>Use a descriptive, keyword-rich &lt;title&gt; tag</li>
+          <li>Add a meta description (shown in search results)</li>
+          <li>Use proper heading hierarchy (one h1 per page)</li>
+          <li>Add alt text to all images</li>
+          <li>Use semantic elements so Google understands your structure</li>
+        </ul>
+        <h3 class="sub">5 Steps for HTML Website Deployment</h3>
+        <ul class="answer-list">
+          <li>Choose a hosting service (Netlify, GitHub Pages, Vercel)</li>
+          <li>Buy/connect a domain name</li>
+          <li>Upload your files (drag-drop on Netlify, or git push)</li>
+          <li>Configure DNS to point your domain to the host</li>
+          <li>Enable HTTPS (SSL certificate — free on Netlify/Vercel)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Q34 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are HTML Entities? What are the Top 5 Emerging Trends in HTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>HTML Entities</strong> are special codes used to display reserved characters (like &lt; &gt; &amp;) that HTML would otherwise interpret as code.</p>
+        <pre><span class="cmt">&lt;!-- Without entity, &lt; breaks HTML --&gt;</span>
+<span class="tag">&lt;p&gt;</span>3 &amp;lt; 5 means 3 is less than 5<span class="tag">&lt;/p&gt;</span>   <span class="cmt">&lt;!-- shows: 3 &lt; 5 --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Tom &amp;amp; Jerry<span class="tag">&lt;/p&gt;</span>                 <span class="cmt">&lt;!-- shows: Tom &amp; Jerry --&gt;</span>
+<span class="tag">&lt;p&gt;</span>&amp;copy; 2024 MyCompany<span class="tag">&lt;/p&gt;</span>            <span class="cmt">&lt;!-- shows: © 2024 --&gt;</span>
+<span class="tag">&lt;p&gt;</span>&amp;nbsp;<span class="tag">&lt;/p&gt;</span>                           <span class="cmt">&lt;!-- non-breaking space --&gt;</span>
+<span class="tag">&lt;p&gt;</span>&amp;gt; Arrow<span class="tag">&lt;/p&gt;</span>                       <span class="cmt">&lt;!-- shows: &gt; Arrow --&gt;</span></pre>
+        <h3 class="sub">Top 5 Emerging Trends in HTML</h3>
+        <ul class="answer-list">
+          <li><strong>Web Components:</strong> Custom HTML elements you define yourself</li>
+          <li><strong>Progressive Web Apps (PWA):</strong> Web apps that work offline like native apps</li>
+          <li><strong>HTML over the Wire (HTMX):</strong> Update parts of page from server without full JS framework</li>
+          <li><strong>Accessibility-first development:</strong> ARIA attributes, semantic HTML becoming standard</li>
+          <li><strong>AI-generated HTML:</strong> Tools like GitHub Copilot and Claude writing HTML/CSS</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- end #html -->
+
+
+  <!-- ═══════════════════════════════════ CSS ═══════════════════════════════════ -->
+  <div id="css">
+    <div class="topic-header">
+      <div class="topic-icon css">CSS</div>
+      <div class="topic-title">CSS</div>
+    </div>
+
+    <div class="section-label">CSS Basics &amp; Implementation</div>
+
+    <!-- C1 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is CSS? What are the 5 ways to Implement CSS in HTML?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>CSS (Cascading Style Sheets)</strong> is the language used to style HTML elements — controlling colours, fonts, layouts, spacing, animations, and responsive behaviour. HTML builds the structure; CSS makes it look good.</p>
+        <pre><span class="cmt">/* 1. Inline Style - directly on element */</span>
+<span class="tag">&lt;p</span> <span class="atr">style</span>=<span class="val">"color: blue; font-size: 18px;"</span><span class="tag">&gt;</span>Hello<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">/* 2. Internal / Embedded - inside &lt;style&gt; in &lt;head&gt; */</span>
+<span class="tag">&lt;style&gt;</span>
+  <span class="cls">p</span> { <span class="atr">color</span>: <span class="val">blue</span>; }
+<span class="tag">&lt;/style&gt;</span>
+
+<span class="cmt">/* 3. External stylesheet - separate .css file */</span>
+<span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span> <span class="atr">href</span>=<span class="val">"style.css"</span><span class="tag">&gt;</span>
+
+<span class="cmt">/* 4. @import inside CSS file */</span>
+<span class="kw">@import</span> <span class="val">url</span>(<span class="str">'buttons.css'</span>);
+
+<span class="cmt">/* 5. JavaScript (dynamically adding styles) */</span>
+<span class="fn">document</span>.<span class="fn">getElementById</span>(<span class="str">'box'</span>).style.color = <span class="str">'red'</span>;</pre>
+      </div>
+    </div>
+
+    <!-- C2 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. Inline vs Internal vs External Stylesheet — when to use each? What are the 5 advantages of External?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Type</th><th>When to Use</th><th>Drawback</th></tr>
+          <tr><td><strong>Inline</strong></td><td>Quick one-off override, email templates, JS dynamic styling</td><td>Not reusable, hard to maintain</td></tr>
+          <tr><td><strong>Internal</strong></td><td>Single-page apps, email HTML, quick prototypes</td><td>Styles don't apply to other pages</td></tr>
+          <tr><td><strong>External</strong></td><td>All real projects — any multi-page site</td><td>Extra HTTP request (tiny, negligible)</td></tr>
+        </table>
+        <h3 class="sub">5 Advantages of External Stylesheet</h3>
+        <ul class="answer-list">
+          <li><strong>Reusability:</strong> One CSS file styles all pages — change once, updates everywhere</li>
+          <li><strong>Separation of concerns:</strong> HTML for structure, CSS for style — cleaner code</li>
+          <li><strong>Caching:</strong> Browser caches the CSS file, so subsequent pages load faster</li>
+          <li><strong>Maintainability:</strong> Much easier to find and edit styles in a dedicated file</li>
+          <li><strong>Team collaboration:</strong> Developers and designers can work on HTML and CSS independently</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- C3 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is CSS Preprocessors? What is SCSS? What are the 3 Types?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">A <strong>CSS Preprocessor</strong> is a tool that extends CSS with programming features (variables, nesting, mixins, functions) and compiles down to regular CSS that browsers understand.</p>
+        <pre><span class="cmt">/* Regular CSS - repetitive */</span>
+<span class="cls">.btn-primary</span> { <span class="atr">background</span>: <span class="val">#3b82f6</span>; <span class="atr">color</span>: <span class="val">white</span>; <span class="atr">padding</span>: <span class="num">10px 20px</span>; }
+<span class="cls">.btn-danger</span>  { <span class="atr">background</span>: <span class="val">#ef4444</span>; <span class="atr">color</span>: <span class="val">white</span>; <span class="atr">padding</span>: <span class="num">10px 20px</span>; }
+
+<span class="cmt">/* SCSS - uses variables, nesting, mixins */</span>
+<span class="kw">$primary</span>: <span class="val">#3b82f6</span>;
+<span class="kw">$padding</span>: <span class="num">10px 20px</span>;
+
+<span class="kw">@mixin</span> <span class="fn">btn</span>(<span class="kw">$bg</span>) {
+  <span class="atr">background</span>: <span class="kw">$bg</span>;
+  <span class="atr">color</span>: <span class="val">white</span>;
+  <span class="atr">padding</span>: <span class="kw">$padding</span>;
+}
+
+<span class="cls">.btn-primary</span> { <span class="kw">@include</span> <span class="fn">btn</span>(<span class="kw">$primary</span>); }
+<span class="cls">.btn-danger</span>  { <span class="kw">@include</span> <span class="fn">btn</span>(<span class="val">#ef4444</span>); }
+
+<span class="cmt">/* Nesting in SCSS */</span>
+<span class="cls">.navbar</span> {
+  <span class="atr">background</span>: <span class="val">#333</span>;
+  <span class="cls">a</span> {                     <span class="cmt">/* compiles to .navbar a */</span>
+    <span class="atr">color</span>: <span class="val">white</span>;
+    <span class="cls">&amp;:hover</span> { <span class="atr">color</span>: <span class="val">#3b82f6</span>; }
+  }
+}</pre>
+        <h3 class="sub">3 Types of CSS Preprocessors</h3>
+        <ul class="answer-list">
+          <li><strong>SASS/SCSS:</strong> Most popular. SCSS syntax is identical to CSS with extra features. Most React/Next.js projects use this.</li>
+          <li><strong>LESS:</strong> Similar to SCSS but uses JavaScript for compilation. Used in older Bootstrap (v3).</li>
+          <li><strong>Stylus:</strong> Flexible, minimalist syntax — less popular but very powerful.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Selectors in CSS</div>
+
+    <!-- C4 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are Selectors in CSS? How many types? ID vs Element vs Class? Universal? Descendant? Attribute? Child? Pseudo-class &amp; Pseudo-element?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">A <strong>CSS Selector</strong> is the pattern that tells CSS which HTML element(s) to style.</p>
+        <pre><span class="cmt">/* 1. Element selector - targets all &lt;p&gt; tags */</span>
+<span class="cls">p</span> { <span class="atr">color</span>: <span class="val">gray</span>; }
+
+<span class="cmt">/* 2. Class selector - targets all .btn elements */</span>
+<span class="cls">.btn</span> { <span class="atr">padding</span>: <span class="num">10px</span>; }
+
+<span class="cmt">/* 3. ID selector - targets ONE #header element */</span>
+<span class="cls">#header</span> { <span class="atr">background</span>: <span class="val">#333</span>; }
+
+<span class="cmt">/* 4. Universal selector - targets EVERY element */</span>
+<span class="cls">*</span> { <span class="atr">box-sizing</span>: <span class="val">border-box</span>; <span class="atr">margin</span>: <span class="num">0</span>; }
+
+<span class="cmt">/* 5. Descendant selector - any p inside .container (any depth) */</span>
+<span class="cls">.container p</span> { <span class="atr">color</span>: <span class="val">blue</span>; }
+
+<span class="cmt">/* 6. Child selector (>) - only DIRECT children */</span>
+<span class="cls">.container > p</span> { <span class="atr">color</span>: <span class="val">red</span>; }
+
+<span class="cmt">/* 7. Attribute selectors */</span>
+<span class="cls">input[type="email"]</span> { <span class="atr">border</span>: <span class="num">1px</span> solid <span class="val">blue</span>; }  <span class="cmt">/* exact match */</span>
+<span class="cls">a[href^="https"]</span> { <span class="atr">color</span>: <span class="val">green</span>; }           <span class="cmt">/* starts with */</span>
+<span class="cls">a[href$=".pdf"]</span> { <span class="atr">color</span>: <span class="val">red</span>; }              <span class="cmt">/* ends with */</span>
+<span class="cls">a[href*="google"]</span> { <span class="atr">font-weight</span>: <span class="val">bold</span>; }     <span class="cmt">/* contains */</span>
+
+<span class="cmt">/* 8. Pseudo-class - element in a specific STATE */</span>
+<span class="cls">a:hover</span> { <span class="atr">color</span>: <span class="val">orange</span>; }          <span class="cmt">/* when mouse hovers */</span>
+<span class="cls">input:focus</span> { <span class="atr">outline</span>: <span class="num">2px</span> solid <span class="val">blue</span>; }
+<span class="cls">li:first-child</span> { <span class="atr">font-weight</span>: <span class="val">bold</span>; }
+<span class="cls">li:nth-child(2)</span> { <span class="atr">color</span>: <span class="val">red</span>; }
+
+<span class="cmt">/* 9. Pseudo-element - styles a PART of the element */</span>
+<span class="cls">p::first-line</span> { <span class="atr">font-weight</span>: <span class="val">bold</span>; }
+<span class="cls">p::first-letter</span> { <span class="atr">font-size</span>: <span class="num">2em</span>; }
+<span class="cls">.btn::before</span> { <span class="atr">content</span>: <span class="str">'→ '</span>; }     <span class="cmt">/* adds content before */</span>
+<span class="cls">.btn::after</span>  { <span class="atr">content</span>: <span class="str">' ✓'</span>; }     <span class="cmt">/* adds content after */</span></pre>
+        <table class="compare-table">
+          <tr><th>Selector</th><th>Specificity</th><th>Use When</th></tr>
+          <tr><td>Element (p)</td><td>Lowest (0,0,1)</td><td>Global base styles</td></tr>
+          <tr><td>Class (.btn)</td><td>Medium (0,1,0)</td><td>Reusable component styles</td></tr>
+          <tr><td>ID (#header)</td><td>High (1,0,0)</td><td>Unique one-off elements</td></tr>
+        </table>
+        <div class="note">💡 Child (>) vs Descendant (space): Child selector only targets DIRECT children. Descendant targets children at ANY depth. Example: <span class="inline-code">.nav > a</span> targets only anchors directly inside .nav, while <span class="inline-code">.nav a</span> targets anchors anywhere inside .nav (including inside nested divs).</div>
+      </div>
+    </div>
+
+    <div class="section-label">Layout and Positioning</div>
+
+    <!-- C5 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. Explain the CSS Box Model.</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">Every HTML element is a rectangular box. The <strong>Box Model</strong> describes the 4 layers around that content:</p>
+        <pre><span class="cmt">/* Box Model layers from inside out: */</span>
+<span class="cmt">/*  Content → Padding → Border → Margin */</span>
+
+<span class="cls">.box</span> {
+  <span class="atr">width</span>: <span class="num">200px</span>;         <span class="cmt">/* content area */</span>
+  <span class="atr">padding</span>: <span class="num">20px</span>;        <span class="cmt">/* space INSIDE the border */</span>
+  <span class="atr">border</span>: <span class="num">5px</span> solid <span class="val">#333</span>; <span class="cmt">/* the border line */</span>
+  <span class="atr">margin</span>: <span class="num">30px</span>;         <span class="cmt">/* space OUTSIDE the border */</span>
+}
+<span class="cmt">/* Default box-sizing: content-box */</span>
+<span class="cmt">/* Total width = 200 + 20+20 + 5+5 = 250px */</span>
+
+<span class="cmt">/* Better: border-box includes padding+border in width */</span>
+<span class="cls">*</span> { <span class="atr">box-sizing</span>: <span class="val">border-box</span>; }
+<span class="cmt">/* Now: total width stays 200px (padding/border included) */</span></pre>
+        <div class="tip">✅ Always use <span class="inline-code">* { box-sizing: border-box; }</span> in every project. It makes width calculations predictable and eliminates layout surprises.</div>
+      </div>
+    </div>
+
+    <!-- C6 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the difference between Padding and Margin?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Padding</th><th>Margin</th></tr>
+          <tr><td>Space INSIDE the border (between content and border)</td><td>Space OUTSIDE the border (between elements)</td></tr>
+          <tr><td>Has the element's background colour</td><td>Always transparent</td></tr>
+          <tr><td>Clicking padding triggers element events</td><td>Clicking margin does NOT trigger events</td></tr>
+          <tr><td>Cannot be negative</td><td>Can be negative (used in special layouts)</td></tr>
+          <tr><td>Affects the element's visible size</td><td>Pushes other elements away</td></tr>
+        </table>
+        <pre><span class="cls">.card</span> {
+  <span class="atr">padding</span>: <span class="num">20px</span>;        <span class="cmt">/* space inside — feels spacious inside */</span>
+  <span class="atr">margin</span>: <span class="num">30px auto</span>;    <span class="cmt">/* centers horizontally, 30px top/bottom gap */</span>
+  <span class="atr">margin-top</span>: <span class="num">-10px</span>;   <span class="cmt">/* negative margin = pulls element up */</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- C7 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is display: inline vs display: block vs display: inline-block?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Property</th><th>inline</th><th>block</th><th>inline-block</th></tr>
+          <tr><td>New line?</td><td>No</td><td>Yes</td><td>No</td></tr>
+          <tr><td>Full width?</td><td>No (content-sized)</td><td>Yes</td><td>No (content-sized)</td></tr>
+          <tr><td>Set width/height?</td><td>No (ignored)</td><td>Yes</td><td>Yes ✅</td></tr>
+          <tr><td>Set top/bottom margin?</td><td>No (ignored)</td><td>Yes</td><td>Yes ✅</td></tr>
+          <tr><td>Examples</td><td>span, a, strong</td><td>div, p, h1</td><td>img, button, input</td></tr>
+        </table>
+        <pre><span class="cmt">/* inline-block: best of both worlds */</span>
+<span class="cls">.nav-link</span> {
+  <span class="atr">display</span>: <span class="val">inline-block</span>;
+  <span class="atr">width</span>: <span class="num">120px</span>;         <span class="cmt">/* works! inline wouldn't allow this */</span>
+  <span class="atr">padding</span>: <span class="num">10px</span>;
+  <span class="atr">text-align</span>: <span class="val">center</span>;
+}</pre>
+      </div>
+    </div>
+
+    <!-- C8 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is z-index in CSS? How are same z-index elements displayed? What is the float property?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>z-index</strong> controls the stacking order of elements along the Z-axis (towards/away from the viewer). Higher z-index = appears in front. Only works on positioned elements (relative, absolute, fixed, sticky).</p>
+        <pre><span class="cls">.modal-backdrop</span> {
+  <span class="atr">position</span>: <span class="val">fixed</span>;
+  <span class="atr">z-index</span>: <span class="num">100</span>;    <span class="cmt">/* behind modal */</span>
+}
+<span class="cls">.modal</span> {
+  <span class="atr">position</span>: <span class="val">fixed</span>;
+  <span class="atr">z-index</span>: <span class="num">200</span>;    <span class="cmt">/* on top of backdrop */</span>
+}
+<span class="cls">.tooltip</span> {
+  <span class="atr">position</span>: <span class="val">absolute</span>;
+  <span class="atr">z-index</span>: <span class="num">999</span>;   <span class="cmt">/* on top of everything */</span>
+}</pre>
+        <div class="note">💡 If two elements have the SAME z-index, the one that appears LATER in the HTML is shown on top (normal document flow order).</div>
+        <h3 class="sub">float property</h3>
+        <pre><span class="cmt">/* float: was the old way to do layouts (before Flexbox) */</span>
+<span class="cls">img</span> {
+  <span class="atr">float</span>: <span class="val">left</span>;    <span class="cmt">/* text wraps around image on the right */</span>
+  <span class="atr">margin</span>: <span class="num">0 15px 10px 0</span>;
+}
+<span class="cmt">/* clearfix: needed to fix parent collapse after float */</span>
+<span class="cls">.clearfix::after</span> {
+  <span class="atr">content</span>: <span class="str">''</span>;
+  <span class="atr">display</span>: <span class="val">block</span>;
+  <span class="atr">clear</span>: <span class="val">both</span>;
+}</pre>
+        <div class="tip">✅ In modern development, float is only used for wrapping text around images. Use Flexbox or Grid for all layouts.</div>
+      </div>
+    </div>
+
+    <!-- C9 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the difference between position: relative / absolute / fixed?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>Value</th><th>Positioned relative to</th><th>Stays when scrolling?</th><th>Use case</th></tr>
+          <tr><td><strong>static</strong> (default)</td><td>Normal document flow</td><td>Scrolls away</td><td>Default — no special positioning</td></tr>
+          <tr><td><strong>relative</strong></td><td>Its own original position</td><td>Scrolls away</td><td>Offset from where it would normally be; parent for absolute children</td></tr>
+          <tr><td><strong>absolute</strong></td><td>Nearest positioned ancestor (relative/absolute/fixed)</td><td>Scrolls away</td><td>Tooltips, badges, dropdowns overlaid on parent</td></tr>
+          <tr><td><strong>fixed</strong></td><td>The viewport (browser window)</td><td>✅ Stays fixed</td><td>Sticky navbars, floating chat buttons, cookie banners</td></tr>
+          <tr><td><strong>sticky</strong></td><td>Scroll position (hybrid)</td><td>✅ Sticks at threshold</td><td>Table headers, section labels that stick while scrolling</td></tr>
+        </table>
+        <pre><span class="cmt">/* Classic tooltip with relative + absolute */</span>
+<span class="cls">.parent</span> {
+  <span class="atr">position</span>: <span class="val">relative</span>;   <span class="cmt">/* makes it the anchor for .tooltip */</span>
+}
+<span class="cls">.tooltip</span> {
+  <span class="atr">position</span>: <span class="val">absolute</span>;
+  <span class="atr">top</span>: <span class="num">-40px</span>;           <span class="cmt">/* 40px above the parent */</span>
+  <span class="atr">left</span>: <span class="num">50%</span>;
+  <span class="atr">transform</span>: <span class="fn">translateX</span>(<span class="num">-50%</span>);
+}</pre>
+      </div>
+    </div>
+
+    <div class="section-label">Responsive Design, Flexbox &amp; Grid</div>
+
+    <!-- C10 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the meta viewport tag? What are Media Queries?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- viewport meta tag: makes layout scale correctly on mobile --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"viewport"</span> <span class="atr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+<span class="cmt">&lt;!-- Without this, mobile browsers zoom out to show desktop layout --&gt;</span></pre>
+        <p class="answer-intro" style="margin-top:14px"><strong>Media Queries</strong> apply different CSS rules based on screen size, device type, or other conditions. They are the foundation of responsive design.</p>
+        <pre><span class="cmt">/* Mobile-first approach (preferred) */</span>
+<span class="cmt">/* Base styles for mobile */</span>
+<span class="cls">.container</span> { <span class="atr">padding</span>: <span class="num">16px</span>; }
+
+<span class="cmt">/* Tablet: 768px and up */</span>
+<span class="kw">@media</span> (<span class="atr">min-width</span>: <span class="num">768px</span>) {
+  <span class="cls">.container</span> { <span class="atr">padding</span>: <span class="num">32px</span>; }
+}
+
+<span class="cmt">/* Desktop: 1024px and up */</span>
+<span class="kw">@media</span> (<span class="atr">min-width</span>: <span class="num">1024px</span>) {
+  <span class="cls">.container</span> { <span class="atr">max-width</span>: <span class="num">1200px</span>; <span class="atr">margin</span>: <span class="num">0 auto</span>; }
+}
+
+<span class="cmt">/* Multiple conditions */</span>
+<span class="kw">@media</span> (<span class="atr">min-width</span>: <span class="num">768px</span>) <span class="kw">and</span> (<span class="atr">max-width</span>: <span class="num">1024px</span>) {
+  <span class="cmt">/* tablets only */</span>
+}
+
+<span class="cmt">/* Dark mode */</span>
+<span class="kw">@media</span> (<span class="atr">prefers-color-scheme</span>: <span class="val">dark</span>) {
+  <span class="cls">body</span> { <span class="atr">background</span>: <span class="val">#111</span>; <span class="atr">color</span>: <span class="val">white</span>; }
+}</pre>
+      </div>
+    </div>
+
+    <!-- C11 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is display: flex in CSS? (Flexbox)</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>Flexbox</strong> is a 1-dimensional layout system (works in a row OR column). It's perfect for aligning items in a navbar, centering content, or distributing space between cards.</p>
+        <pre><span class="cmt">/* PARENT (flex container) */</span>
+<span class="cls">.navbar</span> {
+  <span class="atr">display</span>: <span class="val">flex</span>;
+  <span class="atr">flex-direction</span>: <span class="val">row</span>;          <span class="cmt">/* row (default) | column */</span>
+  <span class="atr">justify-content</span>: <span class="val">space-between</span>; <span class="cmt">/* main axis alignment */</span>
+  <span class="cmt">/* flex-start | center | flex-end | space-around | space-evenly */</span>
+  <span class="atr">align-items</span>: <span class="val">center</span>;          <span class="cmt">/* cross axis alignment */</span>
+  <span class="cmt">/* flex-start | flex-end | stretch | baseline */</span>
+  <span class="atr">flex-wrap</span>: <span class="val">wrap</span>;              <span class="cmt">/* wraps items to next line */</span>
+  <span class="atr">gap</span>: <span class="num">16px</span>;                    <span class="cmt">/* space between items */</span>
+}
+
+<span class="cmt">/* CHILD (flex item) */</span>
+<span class="cls">.logo</span> { <span class="atr">flex</span>: <span class="num">0 0 auto</span>; }      <span class="cmt">/* don't grow, don't shrink */</span>
+<span class="cls">.nav-links</span> { <span class="atr">flex</span>: <span class="num">1</span>; }          <span class="cmt">/* take all remaining space */</span>
+
+<span class="cmt">/* Perfect centering with flexbox */</span>
+<span class="cls">.centered</span> {
+  <span class="atr">display</span>: <span class="val">flex</span>;
+  <span class="atr">justify-content</span>: <span class="val">center</span>;
+  <span class="atr">align-items</span>: <span class="val">center</span>;
+  <span class="atr">min-height</span>: <span class="num">100vh</span>;
+}</pre>
+      </div>
+    </div>
+
+    <!-- C12 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is CSS Grid Layout?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>CSS Grid</strong> is a 2-dimensional layout system — it controls both rows AND columns simultaneously. Perfect for full page layouts, dashboards, and card grids.</p>
+        <pre><span class="cmt">/* Basic grid */</span>
+<span class="cls">.grid</span> {
+  <span class="atr">display</span>: <span class="val">grid</span>;
+  <span class="atr">grid-template-columns</span>: <span class="num">1fr 1fr 1fr</span>;  <span class="cmt">/* 3 equal columns */</span>
+  <span class="atr">grid-template-columns</span>: <span class="fn">repeat</span>(<span class="num">3</span>, <span class="num">1fr</span>); <span class="cmt">/* same as above */</span>
+  <span class="atr">gap</span>: <span class="num">24px</span>;
+}
+
+<span class="cmt">/* Responsive grid without media queries */</span>
+<span class="cls">.auto-grid</span> {
+  <span class="atr">display</span>: <span class="val">grid</span>;
+  <span class="atr">grid-template-columns</span>: <span class="fn">repeat</span>(<span class="val">auto-fit</span>, <span class="fn">minmax</span>(<span class="num">250px</span>, <span class="num">1fr</span>));
+  <span class="cmt">/* auto-fit: creates as many columns as fit, minimum 250px each */</span>
+  <span class="atr">gap</span>: <span class="num">20px</span>;
+}
+
+<span class="cmt">/* Full page layout */</span>
+<span class="cls">.page</span> {
+  <span class="atr">display</span>: <span class="val">grid</span>;
+  <span class="atr">grid-template-areas</span>:
+    <span class="str">"header header"</span>
+    <span class="str">"sidebar main"</span>
+    <span class="str">"footer footer"</span>;
+  <span class="atr">grid-template-columns</span>: <span class="num">250px 1fr</span>;
+  <span class="atr">grid-template-rows</span>: <span class="val">auto</span> <span class="num">1fr auto</span>;
+  <span class="atr">min-height</span>: <span class="num">100vh</span>;
+}
+<span class="cls">header</span>  { <span class="atr">grid-area</span>: <span class="val">header</span>; }
+<span class="cls">aside</span>   { <span class="atr">grid-area</span>: <span class="val">sidebar</span>; }
+<span class="cls">main</span>    { <span class="atr">grid-area</span>: <span class="val">main</span>; }
+<span class="cls">footer</span>  { <span class="atr">grid-area</span>: <span class="val">footer</span>; }</pre>
+        <div class="note">💡 <strong>Flexbox vs Grid:</strong> Use Flexbox for 1D layouts (nav, buttons in a row, centering). Use Grid for 2D layouts (full pages, card grids with aligned rows AND columns).</div>
+      </div>
+    </div>
+
+    <!-- C13 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. How can you create a Sticky Header in CSS? What are 5 best practices for Responsive Design?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">/* Sticky header - sticks to top when you scroll past it */</span>
+<span class="cls">header</span> {
+  <span class="atr">position</span>: <span class="val">sticky</span>;
+  <span class="atr">top</span>: <span class="num">0</span>;                  <span class="cmt">/* sticks at 0px from top */</span>
+  <span class="atr">z-index</span>: <span class="num">100</span>;            <span class="cmt">/* stays above page content */</span>
+  <span class="atr">background</span>: <span class="val">white</span>;
+  <span class="atr">box-shadow</span>: <span class="num">0 2px 8px</span> <span class="fn">rgba</span>(<span class="num">0,0,0,0.1</span>);
+}
+
+<span class="cmt">/* For fixed header (always stays, even before scroll) */</span>
+<span class="cls">header</span> {
+  <span class="atr">position</span>: <span class="val">fixed</span>;
+  <span class="atr">top</span>: <span class="num">0</span>; <span class="atr">left</span>: <span class="num">0</span>; <span class="atr">right</span>: <span class="num">0</span>;
+  <span class="atr">z-index</span>: <span class="num">100</span>;
+}
+<span class="cls">body</span> { <span class="atr">padding-top</span>: <span class="num">70px</span>; }  <span class="cmt">/* compensate for header height */</span></pre>
+        <h3 class="sub">5 Best Practices for Responsive Design</h3>
+        <ul class="answer-list">
+          <li><strong>Mobile-first:</strong> Write CSS for small screens first, then use min-width media queries to scale up</li>
+          <li><strong>Use relative units:</strong> %, em, rem, vw, vh instead of fixed px for fonts and spacing</li>
+          <li><strong>Flexible images:</strong> Always add <span class="inline-code">img { max-width: 100%; height: auto; }</span></li>
+          <li><strong>Use Flexbox/Grid:</strong> Avoid floats and fixed widths — Grid/Flex adapt naturally</li>
+          <li><strong>Test on real devices:</strong> Use Chrome DevTools device emulator at every breakpoint</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- end #css -->
+
+
+  <!-- ═══════════════════════════════════ BOOTSTRAP ═══════════════════════════════════ -->
+  <div id="bootstrap">
+    <div class="topic-header">
+      <div class="topic-icon boot">BOOT</div>
+      <div class="topic-title">Bootstrap</div>
+    </div>
+
+    <div class="section-label">Bootstrap Fundamentals</div>
+
+    <!-- B1 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is Bootstrap? What are the other 5 responsive design frameworks?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro"><strong>Bootstrap</strong> is a free, open-source CSS + JavaScript framework created by Twitter. It gives you a ready-made library of responsive layout classes, pre-designed UI components (navbars, modals, cards), and utility classes — so you can build professional sites without writing CSS from scratch.</p>
+        <ul class="answer-list">
+          <li><strong>Tailwind CSS:</strong> Utility-first, highly customizable, very popular in 2024</li>
+          <li><strong>Foundation:</strong> By Zurb — more flexible than Bootstrap, used in enterprise</li>
+          <li><strong>Bulma:</strong> Pure CSS, no JavaScript, clean and modern</li>
+          <li><strong>Materialize CSS:</strong> Based on Google's Material Design</li>
+          <li><strong>Semantic UI:</strong> Human-friendly class names (class="ui button" etc.)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- B2 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are the 5 Advantages of using Bootstrap?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <ul class="answer-list">
+          <li><strong>Speed:</strong> Pre-built components mean you build pages much faster than writing CSS from scratch</li>
+          <li><strong>Responsive by default:</strong> Its grid system automatically adapts to all screen sizes — mobile, tablet, desktop</li>
+          <li><strong>Cross-browser compatible:</strong> Bootstrap handles browser inconsistencies for you</li>
+          <li><strong>Huge community:</strong> Massive documentation, thousands of themes and templates available</li>
+          <li><strong>Consistent design:</strong> All components follow the same visual language — no mismatched styles across pages</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- B3 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are the 2 ways to include Bootstrap in your website?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <pre><span class="cmt">&lt;!-- Method 1: CDN (easiest - just paste in &lt;head&gt;) --&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="cmt">&lt;!-- Bootstrap CSS --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span>
+    <span class="atr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  ...
+  <span class="cmt">&lt;!-- Bootstrap JS (needed for modals, dropdowns, etc.) --&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+
+<span class="cmt">/* Method 2: NPM (for project-based development) */</span>
+<span class="cmt">/* Install: */</span>
+npm install bootstrap
+
+<span class="cmt">/* Import in main JS/SCSS file: */</span>
+<span class="kw">import</span> <span class="str">'bootstrap/dist/css/bootstrap.min.css'</span>;
+<span class="kw">import</span> <span class="str">'bootstrap/dist/js/bootstrap.bundle.min.js'</span>;</pre>
+        <div class="note">💡 CDN is great for quick projects. NPM is better for React/Vue apps where you want to import only what you need and customize with SCSS variables.</div>
+      </div>
+    </div>
+
+    <!-- B4 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. Explain the Grid System in Bootstrap?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">Bootstrap's grid divides every row into <strong>12 columns</strong>. You assign each element how many of those columns it should take on different screen sizes. Everything is wrapped in <span class="inline-code">.container</span> → <span class="inline-code">.row</span> → <span class="inline-code">.col-*</span>.</p>
+        <pre><span class="cmt">&lt;!-- Basic Grid --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"container"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"row"</span><span class="tag">&gt;</span>
+
+    <span class="cmt">&lt;!-- Takes 6 of 12 columns = 50% width --&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col-6"</span><span class="tag">&gt;</span>Left Half<span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col-6"</span><span class="tag">&gt;</span>Right Half<span class="tag">&lt;/div&gt;</span>
+
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"row"</span><span class="tag">&gt;</span>
+
+    <span class="cmt">&lt;!-- Responsive: full width on mobile, 3 cols on desktop --&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col-12 col-md-4"</span><span class="tag">&gt;</span>Card 1<span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col-12 col-md-4"</span><span class="tag">&gt;</span>Card 2<span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col-12 col-md-4"</span><span class="tag">&gt;</span>Card 3<span class="tag">&lt;/div&gt;</span>
+
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        <div class="tip">✅ The 12-column system lets you do: full width (12), halves (6+6), thirds (4+4+4), quarters (3+3+3+3), sidebar layout (3+9), etc.</div>
+      </div>
+    </div>
+
+    <!-- B5 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What is the difference between col-xs, col-sm, col-md, col-lg &amp; col-xl?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">These are the breakpoint prefixes that tell Bootstrap when to apply the column width. Bootstrap is <strong>mobile-first</strong> — a class applies at that breakpoint AND all larger sizes.</p>
+        <table class="compare-table">
+          <tr><th>Class Prefix</th><th>Breakpoint</th><th>Screen Width</th><th>Device</th></tr>
+          <tr><td>col- (no prefix)</td><td>xs (extra small)</td><td>&lt; 576px</td><td>Portrait phones</td></tr>
+          <tr><td>col-sm-</td><td>sm (small)</td><td>≥ 576px</td><td>Landscape phones</td></tr>
+          <tr><td>col-md-</td><td>md (medium)</td><td>≥ 768px</td><td>Tablets</td></tr>
+          <tr><td>col-lg-</td><td>lg (large)</td><td>≥ 992px</td><td>Desktops</td></tr>
+          <tr><td>col-xl-</td><td>xl (extra large)</td><td>≥ 1200px</td><td>Large desktops</td></tr>
+          <tr><td>col-xxl-</td><td>xxl (Bootstrap 5)</td><td>≥ 1400px</td><td>Wide screens</td></tr>
+        </table>
+        <pre><span class="cmt">&lt;!-- This div: --&gt;</span>
+<span class="cmt">&lt;!-- 12 cols (full width) on mobile --&gt;</span>
+<span class="cmt">&lt;!-- 6 cols (half) on tablet --&gt;</span>
+<span class="cmt">&lt;!-- 4 cols (third) on desktop --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"col-12 col-md-6 col-lg-4"</span><span class="tag">&gt;</span>Responsive Card<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- B6 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. What are Bootstrap Components? Top 10? Modal? Navbar? Carousel?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <p class="answer-intro">Bootstrap <strong>components</strong> are ready-made UI elements — just copy the HTML, add your content, and they work. JavaScript-dependent ones need the Bootstrap JS bundle.</p>
+        <h3 class="sub">Top 10 Bootstrap Components</h3>
+        <ul class="answer-list">
+          <li>Navbar (responsive navigation bar)</li>
+          <li>Modal (popup dialog boxes)</li>
+          <li>Carousel (image slideshow)</li>
+          <li>Card (content container with header/body/footer)</li>
+          <li>Button (styled buttons with variants: primary, secondary, danger etc.)</li>
+          <li>Alert (success/warning/danger message boxes)</li>
+          <li>Badge (small count/status indicators)</li>
+          <li>Accordion (collapsible content panels)</li>
+          <li>Dropdown (click-triggered menus)</li>
+          <li>Toast (small notification pop-ups)</li>
+        </ul>
+        <pre><span class="cmt">&lt;!-- MODAL --&gt;</span>
+<span class="cmt">&lt;!-- Trigger button --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="val">"button"</span> <span class="atr">class</span>=<span class="val">"btn btn-primary"</span>
+  <span class="atr">data-bs-toggle</span>=<span class="val">"modal"</span> <span class="atr">data-bs-target</span>=<span class="val">"#myModal"</span><span class="tag">&gt;</span>
+  Open Modal
+<span class="tag">&lt;/button&gt;</span>
+
+<span class="cmt">&lt;!-- Modal HTML --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"modal fade"</span> <span class="atr">id</span>=<span class="val">"myModal"</span> <span class="atr">tabindex</span>=<span class="val">"-1"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"modal-dialog"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"modal-content"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"modal-header"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;h5</span> <span class="atr">class</span>=<span class="val">"modal-title"</span><span class="tag">&gt;</span>Modal Title<span class="tag">&lt;/h5&gt;</span>
+        <span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"btn-close"</span> <span class="atr">data-bs-dismiss</span>=<span class="val">"modal"</span><span class="tag">&gt;&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"modal-body"</span><span class="tag">&gt;</span>Modal content here!<span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"modal-footer"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"btn btn-secondary"</span> <span class="atr">data-bs-dismiss</span>=<span class="val">"modal"</span><span class="tag">&gt;</span>Close<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"btn btn-primary"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- NAVBAR --&gt;</span>
+<span class="tag">&lt;nav</span> <span class="atr">class</span>=<span class="val">"navbar navbar-expand-lg navbar-dark bg-dark"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"container"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;a</span> <span class="atr">class</span>=<span class="val">"navbar-brand"</span> <span class="atr">href</span>=<span class="val">"#"</span><span class="tag">&gt;</span>MyBrand<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"navbar-toggler"</span> <span class="atr">data-bs-toggle</span>=<span class="val">"collapse"</span>
+      <span class="atr">data-bs-target</span>=<span class="val">"#navMenu"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;span</span> <span class="atr">class</span>=<span class="val">"navbar-toggler-icon"</span><span class="tag">&gt;&lt;/span&gt;</span>
+    <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"collapse navbar-collapse"</span> <span class="atr">id</span>=<span class="val">"navMenu"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;ul</span> <span class="atr">class</span>=<span class="val">"navbar-nav ms-auto"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;li</span> <span class="atr">class</span>=<span class="val">"nav-item"</span><span class="tag">&gt;&lt;a</span> <span class="atr">class</span>=<span class="val">"nav-link active"</span> <span class="atr">href</span>=<span class="val">"#"</span><span class="tag">&gt;</span>Home<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;li</span> <span class="atr">class</span>=<span class="val">"nav-item"</span><span class="tag">&gt;&lt;a</span> <span class="atr">class</span>=<span class="val">"nav-link"</span> <span class="atr">href</span>=<span class="val">"#"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/nav&gt;</span>
+
+<span class="cmt">&lt;!-- CAROUSEL --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">id</span>=<span class="val">"myCarousel"</span> <span class="atr">class</span>=<span class="val">"carousel slide"</span> <span class="atr">data-bs-ride</span>=<span class="val">"carousel"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"carousel-inner"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"carousel-item active"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"slide1.jpg"</span> <span class="atr">class</span>=<span class="val">"d-block w-100"</span> <span class="atr">alt</span>=<span class="val">"Slide 1"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"carousel-item"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"slide2.jpg"</span> <span class="atr">class</span>=<span class="val">"d-block w-100"</span> <span class="atr">alt</span>=<span class="val">"Slide 2"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"carousel-control-prev"</span> <span class="atr">data-bs-target</span>=<span class="val">"#myCarousel"</span> <span class="atr">data-bs-slide</span>=<span class="val">"prev"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;span</span> <span class="atr">class</span>=<span class="val">"carousel-control-prev-icon"</span><span class="tag">&gt;&lt;/span&gt;</span>
+  <span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;button</span> <span class="atr">class</span>=<span class="val">"carousel-control-next"</span> <span class="atr">data-bs-target</span>=<span class="val">"#myCarousel"</span> <span class="atr">data-bs-slide</span>=<span class="val">"next"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;span</span> <span class="atr">class</span>=<span class="val">"carousel-control-next-icon"</span><span class="tag">&gt;&lt;/span&gt;</span>
+  <span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- B7 -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-question">Q. Explain the difference between Bootstrap's container and container-fluid?</div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-body">
+        <table class="compare-table">
+          <tr><th>.container</th><th>.container-fluid</th></tr>
+          <tr><td>Fixed max-width at each breakpoint</td><td>Always 100% width of the viewport</td></tr>
+          <tr><td>Has responsive max-widths (1140px on xl, etc.)</td><td>Stretches to fill the full screen always</td></tr>
+          <tr><td>Content is centered with left/right margins</td><td>Content goes edge-to-edge</td></tr>
+          <tr><td>Use for: page content, articles, forms</td><td>Use for: full-width heroes, backgrounds, navbars</td></tr>
+        </table>
+        <pre><span class="cmt">&lt;!-- container: fixed-width, centered --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"container"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;p&gt;</span>This is max 1140px wide on desktops, centered<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- container-fluid: always 100% width --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"container-fluid bg-dark text-white"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;p&gt;</span>This hero section goes full width!<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- container-lg etc: fluid UNTIL that breakpoint --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"container-md"</span><span class="tag">&gt;</span>
+  <span class="cmt">&lt;!-- fluid on small/xs, fixed width from md and up --&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+    </div>
+
+  </div><!-- end #bootstrap -->
+
+  <div style="text-align:center; margin-top:60px; padding: 24px; border-top: 1px solid var(--border);">
+    <p style="color:var(--muted); font-size:13px;">Part 1 Complete — HTML · CSS · Bootstrap</p>
+    <p style="color:var(--muted); font-size:12px; margin-top:8px;">JavaScript cheatsheet coming as Part 2</p>
+  </div>
+
+</div><!-- end .container -->
+
+<script>
+function toggle(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+function toggleAll() {
+  const cards = document.querySelectorAll('.card');
+  const allOpen = [...cards].every(c => c.classList.contains('open'));
+  cards.forEach(c => allOpen ? c.classList.remove('open') : c.classList.add('open'));
+}
+</script>
+</body>
+</html>
