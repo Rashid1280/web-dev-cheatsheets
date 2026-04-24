@@ -5,7 +5,7 @@ A clean and responsive collection of frontend development cheatsheets for quick 
 ## 📚 Included Guides
 
 * HTML, CSS, Bootstrap
-* React.js
+* Javascript
 
 ## ✨ Features
 
