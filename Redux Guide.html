@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Redux Interview Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Clash+Display:wght@400;600;700&family=Cabinet+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #0b0d11;
+    --surface:   #111318;
+    --surface2:  #181c24;
+    --border:    #222736;
+    --accent:    #7c6af7;      /* redux violet */
+    --accent2:   #f7c948;      /* amber highlight */
+    --accent3:   #5ee7b0;      /* mint */
+    --text:      #dde2ef;
+    --muted:     #6b7492;
+    --key-bg:    #1a2318;
+    --key-color: #5ee7b0;
+    --key-border:#2a3d28;
+    --code-bg:   #090b0f;
+    --radius:    12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cabinet Grotesk', 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0b0d11 0%, #130f22 55%, #0b0f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 44px 24px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 55% 45% at 50% 0%, rgba(124,106,247,0.13) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 30% at 90% 80%, rgba(94,231,176,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-logo {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.85;
+  }
+  .hero h1 {
+    font-family: 'Clash Display', 'Syne', sans-serif;
+    font-size: clamp(30px, 6.5vw, 56px);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── TOPIC BUBBLES ── */
+  .topics-wrapper {
+    padding: 26px 20px 6px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .topics-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topic-bubble {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 6px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .topic-bubble:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 16px 20px 70px;
+  }
+
+  /* ── SECTION ── */
+  .section { margin-top: 42px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .section-title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .section-count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── Q&A CARD ── */
+  .qa-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .qa-card:hover { border-color: #2e3550; }
+  .qa-card.open  { border-color: rgba(124,106,247,0.35); }
+
+  .qa-question {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.5;
+  }
+  .qa-question:hover { color: #fff; }
+
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(124,106,247,0.1);
+    border: 1px solid rgba(124,106,247,0.25);
+    border-radius: 6px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .q-text { flex: 1; }
+
+  .key-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: var(--key-bg);
+    color: var(--key-color);
+    border: 1px solid var(--key-border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .chevron {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 18px;
+    transition: transform 0.25s;
+    line-height: 1;
+  }
+  .qa-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
+
+  /* ── ANSWER ── */
+  .qa-answer {
+    display: none;
+    padding: 0 20px 20px 20px;
+    border-top: 1px solid var(--border);
+    animation: fadeIn 0.2s ease;
+  }
+  .qa-card.open .qa-answer { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .qa-answer p { margin-top: 14px; color: #bfc7de; font-size: 14.5px; }
+  .qa-answer ul, .qa-answer ol {
+    margin: 10px 0 4px 18px;
+    color: #bfc7de;
+    font-size: 14.5px;
+  }
+  .qa-answer li { margin-bottom: 7px; }
+  .qa-answer strong { color: var(--accent2); font-weight: 500; }
+  .qa-answer em    { color: var(--accent3); font-style: normal; font-weight: 500; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid #1c2235;
+    border-radius: 8px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    background: #0e1017;
+    padding: 6px 14px;
+    border-bottom: 1px solid #1c2235;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .code-block pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: #abb2bf;
+  }
+  .kw  { color: #c678dd; }
+  .fn  { color: #61afef; }
+  .str { color: #98c379; }
+  .cm  { color: #5c6370; font-style: italic; }
+  .tag { color: #e06c75; }
+  .at  { color: #d19a66; }
+  .cn  { color: #e5c07b; }
+  .rx  { color: #7c6af7; font-weight: 600; } /* redux accent */
+
+  /* ── DIVIDER ── */
+  hr.soft { border: none; border-top: 1px solid var(--border); margin: 18px 0 4px; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    background: var(--code-bg);
+    border: 1px solid #1c2235;
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .flow-box {
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    font-size: 18px;
+    color: var(--accent2);
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero { padding: 32px 16px 26px; }
+    .qa-question { padding: 14px 14px; font-size: 14px; gap: 8px; }
+    .qa-answer { padding: 0 14px 16px; }
+    .code-block pre { font-size: 11.5px; padding: 12px; }
+    .topics-wrapper { padding: 18px 14px 4px; }
+    .main { padding: 10px 14px 50px; }
+    .flow { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-logo">⬡ Interview Cheatsheet</div>
+  <h1><span>Redux</span> Guide</h1>
+  <p class="hero-sub">Actions · Reducers · Store · Components — all in one place</p>
+</div>
+
+<!-- TOPIC BUBBLES -->
+<div class="topics-wrapper">
+  <div class="topics-label">// Jump to topic</div>
+  <div class="topics">
+    <a class="topic-bubble" href="#section-redux1">Redux — Component / Action / Store / Reducer</a>
+    <a class="topic-bubble" href="#section-redux2">Core Principles / Pros-Cons / Local &amp; Redux State</a>
+    <a class="topic-bubble" href="#section-redux3">Short Answers</a>
+    <a class="topic-bubble" href="#section-redux4">Thunk / Middleware / Error Handling / Flux</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SECTION: Redux — Component / Action / Store / Reducer        -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="section" id="section-redux1">
+    <div class="section-header">
+      <div class="section-dot"></div>
+      <div class="section-title">Redux — Component / Action / Store / Reducer</div>
+      <div class="section-count">9 Qs</div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="qa-card" id="q1">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q1</span>
+        <span class="q-text">What is the role of Redux in React?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p><strong>Redux</strong> is a predictable state management library for JavaScript applications. In the context of React, its role is to provide a <em>single, centralised store</em> for all application state — an approach called the <em>single source of truth</em>. Instead of scattering state across dozens of components and managing complex prop drilling or lifting, Redux holds everything in one place and any component in the tree can read from or write to it directly.</p>
+        <p><strong>Why Redux became popular:</strong> As React applications grew beyond simple UIs, state management became painful. State that needed to be shared between many unrelated components required "lifting" it all the way up to a distant common ancestor and threading it back down through props. Redux solved this by decoupling state entirely from the component hierarchy.</p>
+        <p><strong>Core principles Redux enforces:</strong></p>
+        <ul>
+          <li><strong>Single Source of Truth:</strong> The entire app's state lives in one JavaScript object — the store. There is one definitive place to look at "what the app currently knows."</li>
+          <li><strong>State is Read-Only:</strong> Components never mutate state directly. The only way to change state is to <em>dispatch an action</em> — a plain object describing what happened.</li>
+          <li><strong>Changes are made with Pure Functions:</strong> State transitions are handled by <em>reducers</em> — pure functions that take the current state and an action and return a new state. No side effects, no mutation, always predictable.</li>
+        </ul>
+        <p><strong>Today's Redux landscape:</strong> The modern way to use Redux in React is with <em>Redux Toolkit (RTK)</em> — the official, opinionated toolset that eliminates the boilerplate of classic Redux. It wraps the same core concepts but makes them significantly more ergonomic.</p>
+        <div class="code-block">
+          <div class="code-label">bash — install redux toolkit (modern redux)</div>
+          <pre>npm install @reduxjs/toolkit react-redux</pre>
+        </div>
+        <div class="flow">
+          <div class="flow-box">Component</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">dispatch(action)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Reducer</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">New State (Store)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">UI Re-renders</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="qa-card" id="q2">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q2</span>
+        <span class="q-text">When to use Hooks and when to use Redux in React applications?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>This is one of the most practically important architectural decisions in React development. The answer lies in <strong>scope, complexity, and how widely the state is shared</strong>. There is no single right answer — they solve different problems and often coexist in the same app.</p>
+        <p><strong>Use React Hooks (<code>useState</code>, <code>useReducer</code>, <code>useContext</code>) when:</strong></p>
+        <ul>
+          <li><strong>State is local to a component or small subtree:</strong> Form input values, toggle states (open/closed), pagination page number, a component's own loading/error status — none of these need to be globally accessible. Keep them local with <code>useState</code>.</li>
+          <li><strong>State only needs to be shared across a few levels:</strong> If a parent and its direct children need shared state, lifting state up with hooks is far simpler than setting up a Redux slice.</li>
+          <li><strong>Low-to-medium complexity app:</strong> If your app has a handful of screens and the state is manageable, hooks + Context is cleaner, faster to build, and requires no extra dependencies.</li>
+          <li><strong>You want zero extra bundle size:</strong> Hooks are built into React — no library to install.</li>
+        </ul>
+        <p><strong>Use Redux (Redux Toolkit) when:</strong></p>
+        <ul>
+          <li><strong>State is needed by many unrelated components:</strong> The current logged-in user, a shopping cart, notification badges, feature flags — data that multiple disconnected parts of the UI need simultaneously. Redux's global store makes this effortless.</li>
+          <li><strong>Complex, interdependent state logic:</strong> When state updates involve multiple related sub-values, action-based transitions, and complex derivations — the reducer pattern is cleaner and more predictable than multiple <code>useState</code> calls.</li>
+          <li><strong>You need powerful debugging:</strong> Redux DevTools offers time-travel debugging — you can replay any sequence of actions, inspect the exact state at any point in history, and understand exactly why the UI changed. Invaluable in large apps.</li>
+          <li><strong>Large team with many developers:</strong> Redux enforces a strict, predictable structure (actions → reducers → store) that scales well across large teams — everyone knows where state lives and how it's updated.</li>
+          <li><strong>Server state management with RTK Query:</strong> Redux Toolkit includes RTK Query — a powerful data fetching and caching layer that handles API calls, caching, invalidation, and loading states automatically.</li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">decision guide — hooks vs redux</div>
+          <pre><span class="cm">// ✅ Hooks — local, simple, component-scoped</span>
+<span class="kw">const</span> [isMenuOpen, setIsMenuOpen] = <span class="fn">useState</span>(<span class="kw">false</span>);  <span class="cm">// local toggle</span>
+<span class="kw">const</span> [formData, setFormData]     = <span class="fn">useState</span>({});      <span class="cm">// form state</span>
+<span class="kw">const</span> [isLoading, setIsLoading]   = <span class="fn">useState</span>(<span class="kw">true</span>);   <span class="cm">// component loading</span>
+
+<span class="cm">// ✅ Redux — global, complex, shared across many components</span>
+<span class="cm">// store.js</span>
+<span class="kw">const</span> authSlice = <span class="fn">createSlice</span>({  <span class="cm">// global auth — needed everywhere</span>
+  name: <span class="str">'auth'</span>,
+  initialState: { user: <span class="kw">null</span>, token: <span class="kw">null</span> },
+  reducers: { setUser: (state, action) => { state.user = action.payload; } },
+});
+
+<span class="kw">const</span> cartSlice = <span class="fn">createSlice</span>({  <span class="cm">// cart — accessed from Header, Cart, Checkout</span>
+  name: <span class="str">'cart'</span>,
+  initialState: { items: [], total: <span class="at">0</span> },
+  reducers: {
+    addItem:    (state, { payload }) => { state.items.<span class="fn">push</span>(payload); },
+    removeItem: (state, { payload }) => {
+      state.items = state.items.<span class="fn">filter</span>(i => i.id !== payload);
+    },
+  },
+});</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="qa-card" id="q3">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q3</span>
+        <span class="q-text">What is the flow of data in React while using Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Redux enforces a <strong>strict unidirectional data flow</strong>. Data can only travel in one direction around a predictable cycle. This is what makes Redux apps so debuggable — given any action, you know exactly what will happen to the state.</p>
+        <p><strong>The Redux data flow — 5 steps:</strong></p>
+        <ol>
+          <li>
+            <strong>User Interaction / Event:</strong> The user interacts with the UI — clicks a button, submits a form, changes a value. The React component responds to this event.
+          </li>
+          <li>
+            <strong>Dispatch an Action:</strong> The component calls <code>dispatch(action)</code>. An <em>action</em> is a plain JavaScript object with a <code>type</code> field (describing what happened) and an optional <code>payload</code> (the data associated with the event). The <code>dispatch</code> function is provided by <code>useDispatch()</code> hook from <code>react-redux</code>.
+          </li>
+          <li>
+            <strong>Reducer Processes the Action:</strong> The Redux store sends the current state and the dispatched action to the relevant <em>reducer function</em>. The reducer is a pure function — it examines the action's type, applies the appropriate state transformation, and returns the <em>new state</em>. It never mutates the existing state directly.
+          </li>
+          <li>
+            <strong>Store Updates:</strong> Redux replaces the old state in the store with the new state returned by the reducer. The store now holds the updated application state.
+          </li>
+          <li>
+            <strong>UI Re-renders:</strong> All React components that are subscribed to the relevant part of the store (via <code>useSelector()</code>) are automatically notified of the state change. They re-render with the new data — the UI updates to reflect the new state.
+          </li>
+        </ol>
+        <div class="flow">
+          <div class="flow-box">UI Event</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">dispatch(action)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Reducer(state, action)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">New Store State</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">useSelector re-renders</div>
+        </div>
+        <div class="code-block">
+          <div class="code-label">jsx — full redux data flow traced</div>
+          <pre><span class="cm">// Step 1 & 2: Component dispatches an action on button click</span>
+<span class="kw">function</span> <span class="cn">AddToCartButton</span>({ product }) {
+  <span class="kw">const</span> dispatch = <span class="fn">useDispatch</span>();
+  <span class="kw">return</span> (
+    <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">dispatch</span>({
+      type: <span class="str">'cart/addItem'</span>,
+      payload: { id: product.id, name: product.name, price: product.price }
+    })}<span class="tag">&gt;</span>
+      Add to Cart
+    <span class="tag">&lt;/button&gt;</span>
+  );
+}
+
+<span class="cm">// Step 3: Reducer processes the action</span>
+<span class="kw">function</span> <span class="fn">cartReducer</span>(state = { items: [] }, action) {
+  <span class="kw">switch</span> (action.type) {
+    <span class="kw">case</span> <span class="str">'cart/addItem'</span>:
+      <span class="kw">return</span> { ...state, items: [...state.items, action.payload] };
+    <span class="kw">default</span>: <span class="kw">return</span> state; <span class="cm">// Step 4: new state returned to store</span>
+  }
+}
+
+<span class="cm">// Step 5: Another component reads updated store & re-renders</span>
+<span class="kw">function</span> <span class="cn">CartBadge</span>() {
+  <span class="kw">const</span> count = <span class="fn">useSelector</span>(state => state.cart.items.length);
+  <span class="kw">return</span> <span class="tag">&lt;span&gt;</span>🛒 {count}<span class="tag">&lt;/span&gt;</span>; <span class="cm">// auto-updates when store changes</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="qa-card" id="q4">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q4</span>
+        <span class="q-text">How to install Redux for a React application?</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Modern Redux uses <strong>Redux Toolkit (RTK)</strong> — the official, opinionated way to write Redux code. It eliminates the classic Redux boilerplate and is the recommended starting point for all new Redux projects. You also need <strong>React Redux</strong> — the official binding library that connects Redux to React components.</p>
+        <p><strong>Two packages you always install together:</strong></p>
+        <ul>
+          <li><strong><code>@reduxjs/toolkit</code>:</strong> The core Redux Toolkit library. Provides <code>createSlice</code>, <code>createAsyncThunk</code>, <code>configureStore</code>, and RTK Query.</li>
+          <li><strong><code>react-redux</code>:</strong> The React bindings layer. Provides the <code>&lt;Provider&gt;</code> component and the <code>useSelector</code> and <code>useDispatch</code> hooks that connect React components to the Redux store.</li>
+        </ul>
+        <p><strong>4-step setup process:</strong></p>
+        <div class="code-block">
+          <div class="code-label">bash — step 1: install packages</div>
+          <pre>npm install @reduxjs/toolkit react-redux</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">jsx — step 2: create a slice (store/counterSlice.js)</div>
+          <pre><span class="kw">import</span> { createSlice } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>;
+
+<span class="kw">const</span> counterSlice = <span class="fn">createSlice</span>({
+  name:         <span class="str">'counter'</span>,
+  initialState: { value: <span class="at">0</span> },
+  reducers: {
+    increment:   state => { state.value += <span class="at">1</span>; },
+    decrement:   state => { state.value -= <span class="at">1</span>; },
+    incrementBy: (state, action) => { state.value += action.payload; },
+  },
+});
+
+<span class="kw">export const</span> { increment, decrement, incrementBy } = counterSlice.actions;
+<span class="kw">export default</span> counterSlice.reducer;</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">jsx — step 3: create the store (store/store.js)</div>
+          <pre><span class="kw">import</span> { configureStore } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>;
+<span class="kw">import</span> counterReducer <span class="kw">from</span> <span class="str">'./counterSlice'</span>;
+
+<span class="kw">export const</span> store = <span class="fn">configureStore</span>({
+  reducer: {
+    counter: counterReducer,
+    <span class="cm">// add more slices here as the app grows</span>
+    <span class="cm">// auth: authReducer,</span>
+    <span class="cm">// cart: cartReducer,</span>
+  },
+});</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-label">jsx — step 4: wrap app with provider (main.jsx / index.js)</div>
+          <pre><span class="kw">import</span> { Provider } <span class="kw">from</span> <span class="str">'react-redux'</span>;
+<span class="kw">import</span> { store }    <span class="kw">from</span> <span class="str">'./store/store'</span>;
+
+ReactDOM.<span class="fn">createRoot</span>(document.<span class="fn">getElementById</span>(<span class="str">'root'</span>)).<span class="fn">render</span>(
+  <span class="tag">&lt;Provider</span> <span class="at">store</span>={store}<span class="tag">&gt;</span>   <span class="cm">// makes store available to all components</span>
+    <span class="tag">&lt;App /&gt;</span>
+  <span class="tag">&lt;/Provider&gt;</span>
+);</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="qa-card" id="q5">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q5</span>
+        <span class="q-text">What are Action Creators in React Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>An <strong>Action Creator</strong> is a function that <em>creates and returns an action object</em>. Instead of manually writing action objects every time you dispatch, you call the action creator function — which produces the correctly-structured action object for you. This promotes consistency, reduces typos, and centralises action object creation.</p>
+        <p><strong>Why action creators exist:</strong></p>
+        <ul>
+          <li><strong>Consistency:</strong> The action type string (<code>'cart/addItem'</code>) is defined in one place — in the action creator. If you need to change the type string, you change it once, not everywhere it's dispatched.</li>
+          <li><strong>Encapsulation:</strong> The shape of the payload is defined in the action creator. Callers don't need to know the exact structure — just call the function with the necessary data.</li>
+          <li><strong>Testability:</strong> Action creators are pure functions that return plain objects — trivially easy to unit test.</li>
+        </ul>
+        <p><strong>In Redux Toolkit:</strong> When you define reducers inside <code>createSlice()</code>, RTK <em>automatically generates action creators</em> for each reducer function. You don't write them manually. The slice's <code>.actions</code> property exports these auto-generated action creators.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — action creators: manual (classic) vs auto (RTK)</div>
+          <pre><span class="cm">// ── Classic Redux — manual action creators ──</span>
+<span class="kw">const</span> <span class="fn">addToCart</span> = (product) => ({   <span class="cm">// function returns action object</span>
+  type:    <span class="str">'cart/ADD_ITEM'</span>,
+  payload: product,
+});
+
+<span class="kw">const</span> <span class="fn">removeFromCart</span> = (id) => ({
+  type:    <span class="str">'cart/REMOVE_ITEM'</span>,
+  payload: id,
+});
+
+<span class="cm">// Usage: dispatch(addToCart({ id: 1, name: 'Laptop', price: 999 }))</span>
+
+<span class="cm">// ── Redux Toolkit — action creators auto-generated by createSlice ──</span>
+<span class="kw">const</span> cartSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'cart'</span>,
+  initialState: { items: [] },
+  reducers: {
+    addItem:    (state, action) => { state.items.<span class="fn">push</span>(action.payload); },
+    removeItem: (state, action) => {
+      state.items = state.items.<span class="fn">filter</span>(i => i.id !== action.payload);
+    },
+  },
+});
+
+<span class="cm">// RTK auto-creates: cartSlice.actions.addItem and cartSlice.actions.removeItem</span>
+<span class="kw">export const</span> { addItem, removeItem } = cartSlice.actions;
+
+<span class="cm">// Usage in component — same dispatch syntax, just cleaner</span>
+<span class="kw">const</span> dispatch = <span class="fn">useDispatch</span>();
+<span class="fn">dispatch</span>(<span class="fn">addItem</span>({ id: <span class="at">1</span>, name: <span class="str">'Laptop'</span>, price: <span class="at">999</span> }));
+<span class="fn">dispatch</span>(<span class="fn">removeItem</span>(<span class="at">1</span>));
+
+<span class="cm">// What addItem({ id: 1, name: 'Laptop' }) actually produces:</span>
+<span class="cm">// { type: 'cart/addItem', payload: { id: 1, name: 'Laptop' } }</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="qa-card" id="q6">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q6</span>
+        <span class="q-text">What is the difference between Action Creators, Action Object, and Action Type?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>These three terms are related but distinct — confusing them is a common mistake. Here's a precise breakdown of each:</p>
+        <ul>
+          <li>
+            <strong>Action Type — the identifier string:</strong> A plain string constant that uniquely identifies a specific state change event. By convention it uses the format <code>'sliceName/actionName'</code> (e.g., <code>'cart/addItem'</code>, <code>'auth/setUser'</code>). The action type is the <em>label</em> — the reducer switches on this to decide which state transition to apply. In classic Redux, types were defined as separate constants (<code>const ADD_ITEM = 'cart/ADD_ITEM'</code>) to avoid typos. In RTK, the type is automatically generated from the slice name and reducer name.
+          </li>
+          <li>
+            <strong>Action Object — the event description:</strong> A plain JavaScript object that describes <em>what happened</em>. It must have a <code>type</code> property (the action type string) and optionally a <code>payload</code> property containing any additional data needed to compute the new state. This is what you actually <em>dispatch</em> to the Redux store. The reducer receives this object as its second argument.
+          </li>
+          <li>
+            <strong>Action Creator — the factory function:</strong> A function that, when called with the necessary arguments, creates and returns the correctly-shaped action object. It abstracts the manual construction of the action object. In RTK, these are auto-generated. You call them and pass the result to <code>dispatch</code>.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — the three concepts side by side</div>
+          <pre><span class="cm">// ── 1. Action Type — just a string identifier ──</span>
+<span class="kw">const</span> ADD_ITEM_TYPE = <span class="str">'cart/addItem'</span>; <span class="cm">// classic constant</span>
+<span class="cm">// In RTK: cartSlice.actions.addItem.type → 'cart/addItem'</span>
+
+<span class="cm">// ── 2. Action Object — plain object sent to the reducer ──</span>
+<span class="kw">const</span> actionObject = {
+  type:    <span class="str">'cart/addItem'</span>,           <span class="cm">// ← action type (required)</span>
+  payload: { id: <span class="at">1</span>, name: <span class="str">'Laptop'</span>, price: <span class="at">999</span> } <span class="cm">// ← data (optional)</span>
+};
+
+<span class="cm">// ── 3. Action Creator — function that creates the action object ──</span>
+<span class="kw">const</span> <span class="fn">addItem</span> = (product) => ({  <span class="cm">// called with data, returns action object</span>
+  type:    <span class="str">'cart/addItem'</span>,
+  payload: product,
+});
+
+<span class="cm">// ── How they fit together ──</span>
+<span class="kw">const</span> actionObj = <span class="fn">addItem</span>({ id: <span class="at">1</span>, name: <span class="str">'Laptop'</span>, price: <span class="at">999</span> });
+<span class="cm">// actionObj → { type: 'cart/addItem', payload: { id: 1, name: 'Laptop', price: 999 } }</span>
+
+<span class="fn">dispatch</span>(actionObj);         <span class="cm">// dispatch the action object</span>
+<span class="cm">// or inline:</span>
+<span class="fn">dispatch</span>(<span class="fn">addItem</span>({ id: <span class="at">1</span>, name: <span class="str">'Laptop'</span>, price: <span class="at">999</span> }));</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="qa-card" id="q7">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Explain React Component Structure while using Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>When using Redux, the component architecture stays the same as any React app — the difference is <em>how components read and update state</em>. Instead of useState or props, components connect to the Redux store using two hooks from <code>react-redux</code>.</p>
+        <p><strong>Two hooks that connect components to Redux:</strong></p>
+        <ul>
+          <li>
+            <strong><code>useSelector(selectorFn)</code> — read from store:</strong> Takes a selector function as argument. The selector receives the full Redux state tree and returns only the slice of state this component needs. Whenever that slice changes, the component re-renders. When the slice doesn't change, the component is skipped — this makes it efficient.
+          </li>
+          <li>
+            <strong><code>useDispatch()</code> — write to store:</strong> Returns the store's <code>dispatch</code> function. You call this with an action object (or action creator call) whenever you want to trigger a state change. The dispatch goes to the reducer, which computes the new state.
+          </li>
+        </ul>
+        <p><strong>The overall file/folder structure:</strong></p>
+        <ul>
+          <li><strong>store/ folder:</strong> Contains all Redux-related code — slices, store configuration, selectors.</li>
+          <li><strong>components/ folder:</strong> React components — they import action creators and use <code>useSelector</code>/<code>useDispatch</code> but contain no reducer logic.</li>
+          <li><strong>main.jsx:</strong> Wraps the entire app in <code>&lt;Provider store={store}&gt;</code> — makes the store accessible to all components.</li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — component structure with redux</div>
+          <pre><span class="cm">// store/cartSlice.js — state + actions defined here</span>
+<span class="kw">import</span> { createSlice } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>;
+<span class="kw">const</span> cartSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'cart'</span>,
+  initialState: { items: [], total: <span class="at">0</span> },
+  reducers: {
+    addItem:    (state, { payload }) => { state.items.<span class="fn">push</span>(payload); },
+    removeItem: (state, { payload }) => {
+      state.items = state.items.<span class="fn">filter</span>(i => i.id !== payload);
+    },
+    clearCart:  state => { state.items = []; },
+  },
+});
+<span class="kw">export const</span> { addItem, removeItem, clearCart } = cartSlice.actions;
+<span class="kw">export default</span> cartSlice.reducer;
+
+<span class="cm">// store/store.js — single store for the app</span>
+<span class="kw">import</span> { configureStore } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>;
+<span class="kw">import</span> cartReducer <span class="kw">from</span> <span class="str">'./cartSlice'</span>;
+<span class="kw">export const</span> store = <span class="fn">configureStore</span>({ reducer: { cart: cartReducer } });
+
+<span class="cm">// components/CartBadge.jsx — reads from store (display component)</span>
+<span class="kw">import</span> { useSelector } <span class="kw">from</span> <span class="str">'react-redux'</span>;
+<span class="kw">function</span> <span class="cn">CartBadge</span>() {
+  <span class="kw">const</span> itemCount = <span class="fn">useSelector</span>(state => state.cart.items.length);
+  <span class="kw">return</span> <span class="tag">&lt;span&gt;</span>🛒 {itemCount}<span class="tag">&lt;/span&gt;</span>;
+}
+
+<span class="cm">// components/ProductCard.jsx — dispatches actions (interactive component)</span>
+<span class="kw">import</span> { useDispatch } <span class="kw">from</span> <span class="str">'react-redux'</span>;
+<span class="kw">import</span> { addItem }     <span class="kw">from</span> <span class="str">'../store/cartSlice'</span>;
+<span class="kw">function</span> <span class="cn">ProductCard</span>({ product }) {
+  <span class="kw">const</span> dispatch = <span class="fn">useDispatch</span>();
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>{product.name}<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">dispatch</span>(<span class="fn">addItem</span>(product))}<span class="tag">&gt;</span>Add to Cart<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="qa-card" id="q8">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q8</span>
+        <span class="q-text">What is the role of the Store in React Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>The <strong>Store</strong> is the central object in Redux — the <em>single source of truth</em> for the entire application's state. It is the container that holds the complete state tree, manages all state updates, and notifies subscribers when state changes.</p>
+        <p><strong>The Store's 4 core responsibilities:</strong></p>
+        <ul>
+          <li>
+            <strong>Holds the entire application state:</strong> The store maintains one JavaScript object that represents every piece of state your app has — user auth, shopping cart, UI flags, fetched data. There is only ever one store in a Redux app (unlike multiple <code>useState</code> calls scattered across components).
+          </li>
+          <li>
+            <strong>Receives dispatched actions:</strong> The only way to trigger a state change is to call <code>store.dispatch(action)</code>. The store receives the action, passes it along with the current state to the appropriate reducer, and stores the result.
+          </li>
+          <li>
+            <strong>Runs reducers to compute new state:</strong> When an action is dispatched, the store passes it through all reducers (via <code>combineReducers</code> under the hood in <code>configureStore</code>). Each reducer handles its own slice of state. The results are combined into the new state tree.
+          </li>
+          <li>
+            <strong>Notifies subscribers of state changes:</strong> The store maintains a list of listener functions. When state updates, it notifies all listeners. In React, <code>useSelector</code> registers components as listeners — so they automatically re-render when their selected slice of state changes.
+          </li>
+        </ul>
+        <p><strong>Creating the store with RTK (<code>configureStore</code>):</strong> RTK's <code>configureStore</code> wraps Redux's <code>createStore</code>, automatically sets up the Redux DevTools extension, adds the middleware for async thunks (<code>redux-thunk</code>), and combines reducers from the <code>reducer</code> config option.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — store creation and key APIs</div>
+          <pre><span class="kw">import</span> { configureStore } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>;
+<span class="kw">import</span> authReducer  <span class="kw">from</span> <span class="str">'./authSlice'</span>;
+<span class="kw">import</span> cartReducer  <span class="kw">from</span> <span class="str">'./cartSlice'</span>;
+<span class="kw">import</span> notifReducer <span class="kw">from</span> <span class="str">'./notifSlice'</span>;
+
+<span class="kw">export const</span> store = <span class="fn">configureStore</span>({
+  reducer: {
+    auth:  authReducer,   <span class="cm">// state.auth</span>
+    cart:  cartReducer,   <span class="cm">// state.cart</span>
+    notif: notifReducer,  <span class="cm">// state.notif</span>
+  },
+  <span class="cm">// devTools: true by default in development</span>
+  <span class="cm">// middleware: auto-includes redux-thunk for async</span>
+});
+
+<span class="cm">// Store's built-in API (rarely used directly in React — hooks handle this)</span>
+store.<span class="fn">getState</span>();        <span class="cm">// returns the current complete state tree</span>
+store.<span class="fn">dispatch</span>(action); <span class="cm">// triggers a state update</span>
+store.<span class="fn">subscribe</span>(fn);   <span class="cm">// register a listener (useSelector does this for you)</span>
+
+<span class="cm">// Full state shape after configureStore:</span>
+<span class="cm">// {</span>
+<span class="cm">//   auth:  { user: null, token: null, isLoading: false },</span>
+<span class="cm">//   cart:  { items: [], total: 0 },</span>
+<span class="cm">//   notif: { messages: [], unread: 0 }</span>
+<span class="cm">// }</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="qa-card" id="q9">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q9</span>
+        <span class="q-text">What is the role of the Reducer in Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>A <strong>Reducer</strong> is a <em>pure function</em> that is the heart of Redux's state management logic. It is responsible for <strong>computing the new state</strong> in response to a dispatched action. Redux gets its name from the concept of the <code>Array.reduce()</code> method — a reducer accumulates state over a series of actions.</p>
+        <p><strong>The reducer's signature:</strong></p>
+        <div class="code-block">
+          <div class="code-label">jsx — reducer signature</div>
+          <pre>(currentState, action) => newState</pre>
+        </div>
+        <p><strong>Rules a reducer must follow — it MUST be a pure function:</strong></p>
+        <ul>
+          <li><strong>Same inputs → same output:</strong> Given the same current state and action, the reducer must always return the same new state. No randomness, no relying on external variables.</li>
+          <li><strong>No side effects:</strong> A reducer must not make API calls, generate random numbers, read from <code>Date.now()</code>, modify files, log to the console, or do anything that interacts with the outside world. It computes state and that's it.</li>
+          <li><strong>Never mutate the existing state:</strong> A reducer must treat state as immutable. It should always return a new state object — never modify the existing one in place. <em>Exception:</em> Redux Toolkit uses Immer internally, which lets you write seemingly mutating code (<code>state.count++</code>) that is safely converted to immutable updates behind the scenes.</li>
+          <li><strong>Always return state for unknown actions:</strong> A reducer's <code>default</code> case must return the current state unchanged — this ensures other reducers' actions don't accidentally clear your state.</li>
+        </ul>
+        <p><strong>Slice reducers vs Root reducer:</strong> In a large app, you write individual reducers for each domain (cart, auth, notifications). <code>configureStore</code> combines them into a <em>root reducer</em> — each sub-reducer only manages its own slice of the state tree.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — reducer: classic vs RTK (Immer)</div>
+          <pre><span class="cm">// ── Classic Redux Reducer — manual immutable updates (verbose) ──</span>
+<span class="kw">function</span> <span class="fn">cartReducer</span>(state = { items: [], total: <span class="at">0</span> }, action) {
+  <span class="kw">switch</span> (action.type) {
+    <span class="kw">case</span> <span class="str">'cart/addItem'</span>:
+      <span class="kw">return</span> {
+        ...state,                              <span class="cm">// spread to avoid mutation</span>
+        items: [...state.items, action.payload] <span class="cm">// new array</span>
+      };
+    <span class="kw">case</span> <span class="str">'cart/removeItem'</span>:
+      <span class="kw">return</span> {
+        ...state,
+        items: state.items.<span class="fn">filter</span>(i => i.id !== action.payload)
+      };
+    <span class="kw">case</span> <span class="str">'cart/clearCart'</span>:
+      <span class="kw">return</span> { ...state, items: [] };
+    <span class="kw">default</span>:
+      <span class="kw">return</span> state; <span class="cm">// ← always return state for unknown actions</span>
+  }
+}
+
+<span class="cm">// ── RTK createSlice Reducer — Immer allows "mutation" syntax ──</span>
+<span class="kw">const</span> cartSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'cart'</span>,
+  initialState: { items: [], total: <span class="at">0</span> },
+  reducers: {
+    <span class="cm">// Looks like mutation but Immer makes it safe ✅</span>
+    addItem:    (state, { payload }) => { state.items.<span class="fn">push</span>(payload); },
+    removeItem: (state, { payload }) => {
+      state.items = state.items.<span class="fn">filter</span>(i => i.id !== payload);
+    },
+    clearCart:  state => { state.items = []; state.total = <span class="at">0</span>; },
+  },
+});
+
+<span class="cm">// Pure function check:</span>
+<span class="cm">// ✅ No API calls    ✅ No Math.random()    ✅ No Date.now()</span>
+<span class="cm">// ✅ Same in → same out    ✅ Default returns current state</span></pre>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section redux1 -->
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION: Core Principles / Pros-Cons / Local & Redux State       -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="section-redux2">
+    <div class="section-header">
+      <div class="section-dot"></div>
+      <div class="section-title">Core Principles / Pros-Cons / Local &amp; Redux State</div>
+      <div class="section-count">4 Qs</div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="qa-card" id="q10">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q10</span>
+        <span class="q-text">Explain the Core Principles of Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Redux is built on three foundational principles. Every design decision in Redux flows from these — understanding them is the key to understanding why Redux works the way it does.</p>
+        <hr class="soft"/>
+        <p><strong>Principle 1 — Single Source of Truth:</strong></p>
+        <p>The <em>entire application state</em> is stored in a single JavaScript object tree within a <em>single store</em>. No matter how many components or features your app has, there is one and only one authoritative source of data. This makes the application's state at any given moment completely transparent — you can log the store and see everything your app knows. It also enables powerful features like undo/redo, state persistence (saving the whole app state to localStorage), and server-side state hydration.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — single source of truth</div>
+          <pre><span class="cm">// The ENTIRE app state — one object, one store</span>
+{
+  auth:  { user: { id: <span class="at">1</span>, name: <span class="str">'Riya'</span> }, token: <span class="str">'jwt...'</span> },
+  cart:  { items: [{ id: <span class="at">1</span>, name: <span class="str">'Laptop'</span>, price: <span class="at">999</span> }], total: <span class="at">999</span> },
+  notif: { messages: [], unread: <span class="at">0</span> },
+  ui:    { sidebarOpen: <span class="kw">false</span>, theme: <span class="str">'dark'</span> },
+}
+<span class="cm">// One store.getState() call gives you the complete picture — always</span></pre>
+        </div>
+        <hr class="soft"/>
+        <p><strong>Principle 2 — State is Read-Only:</strong></p>
+        <p>No component, no event handler, no API callback is allowed to directly modify the state in the store. The only legal way to change state is to <em>dispatch an action</em> — a plain JavaScript object that describes <em>what happened</em>. This enforces a deliberate, auditable update trail. Every state change is explicit, intentional, and goes through a controlled pipeline. With Redux DevTools, you can see every dispatched action and the state before and after — making bugs trivially traceable.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — state is read-only</div>
+          <pre><span class="cm">// ❌ Direct mutation — NEVER allowed in Redux</span>
+store.getState().cart.items.<span class="fn">push</span>(newItem);     <span class="cm">// forbidden</span>
+store.getState().auth.user = <span class="kw">null</span>;             <span class="cm">// forbidden</span>
+
+<span class="cm">// ✅ Only way to change state — dispatch an action</span>
+<span class="fn">dispatch</span>({ type: <span class="str">'cart/addItem'</span>, payload: newItem });
+<span class="fn">dispatch</span>({ type: <span class="str">'auth/logout'</span> });
+<span class="cm">// Every change is explicit, traceable, and auditable</span></pre>
+        </div>
+        <hr class="soft"/>
+        <p><strong>Principle 3 — Changes are Made with Pure Functions (Reducers):</strong></p>
+        <p>To specify how the state changes in response to actions, you write <em>pure reducer functions</em>. A pure function has no side effects and always returns the same output for the same input. Reducers take the previous state and an action, and return the <em>next state</em> — never mutating the previous state in place. Because reducers are pure, they are completely predictable and trivial to test — you pass in a state and an action, and assert on the output, with no mocking required.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — changes via pure reducer functions</div>
+          <pre><span class="cm">// Pure reducer — same input always → same output, no side effects</span>
+<span class="kw">function</span> <span class="fn">cartReducer</span>(state = { items: [] }, action) {
+  <span class="kw">switch</span> (action.type) {
+    <span class="kw">case</span> <span class="str">'cart/addItem'</span>:
+      <span class="cm">// Returns NEW state — never mutates existing state</span>
+      <span class="kw">return</span> { ...state, items: [...state.items, action.payload] };
+    <span class="kw">default</span>: <span class="kw">return</span> state;
+  }
+}
+
+<span class="cm">// Trivially testable — no React, no mocks needed</span>
+<span class="kw">const</span> nextState = <span class="fn">cartReducer</span>(
+  { items: [] },
+  { type: <span class="str">'cart/addItem'</span>, payload: { id: <span class="at">1</span>, name: <span class="str">'Laptop'</span> } }
+);
+<span class="cm">// expect(nextState.items).toHaveLength(1); ← passes ✅</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="qa-card" id="q11">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q11</span>
+        <span class="q-text">List 5 benefits of using Redux in React?</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Redux isn't right for every project, but when it fits — it brings serious advantages:</p>
+        <ul>
+          <li>
+            <strong>1. Predictable, Debuggable State — Time-Travel Debugging:</strong> Because state only changes via pure reducers and actions, the Redux DevTools browser extension can record every action dispatched during a session. You can <em>replay</em> the exact sequence of actions, jump back to any previous state, and see precisely which action caused a bug. This "time-travel debugging" capability is unmatched — it dramatically reduces the time spent hunting down hard-to-reproduce bugs in complex apps.
+          </li>
+          <li>
+            <strong>2. Eliminates Prop Drilling — Global State Access:</strong> Any component, no matter how deeply nested in the component tree, can read from or write to the Redux store directly using <code>useSelector</code> and <code>useDispatch</code>. You never need to thread props down through 5 layers of components just to share data. This keeps intermediate components clean — they only receive the props they actually need.
+          </li>
+          <li>
+            <strong>3. Consistent, Scalable Architecture:</strong> Redux enforces a strict, standard pattern — actions go in, reducers compute state, store holds it, selectors read it. Every developer on the team, regardless of their experience level, knows exactly where to find any piece of state and how to change it. This consistency is invaluable in large teams and makes onboarding new developers significantly faster.
+          </li>
+          <li>
+            <strong>4. Centralised Business Logic:</strong> Reducer functions contain the state transition logic for the entire domain — independent of React components. This separation of concerns means your core business logic can be tested without rendering any components, shared between web and React Native apps, and refactored without touching UI code.
+          </li>
+          <li>
+            <strong>5. Rich Ecosystem — Middleware, RTK Query:</strong> Redux's middleware system allows you to intercept dispatched actions and add cross-cutting concerns like logging, analytics tracking, error reporting, and async API calls. Redux Toolkit's <em>RTK Query</em> is a powerful data fetching and caching layer built into RTK — it handles API calls, request deduplication, cache invalidation, optimistic updates, and loading/error states automatically.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — RTK Query: benefit 5 in action</div>
+          <pre><span class="kw">import</span> { createApi, fetchBaseQuery } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit/query/react'</span>;
+
+<span class="cm">// Define API once — RTK Query handles caching, loading, errors</span>
+<span class="kw">const</span> api = <span class="fn">createApi</span>({
+  baseQuery: <span class="fn">fetchBaseQuery</span>({ baseUrl: <span class="str">'/api'</span> }),
+  endpoints: (build) => ({
+    getUser:  build.<span class="fn">query</span>({ query: id => <span class="str">`/users/</span>${id}<span class="str">`</span> }),
+    getUsers: build.<span class="fn">query</span>({ query: () => <span class="str">'/users'</span> }),
+  }),
+});
+
+<span class="kw">export const</span> { useGetUserQuery, useGetUsersQuery } = api;
+
+<span class="cm">// Component — no useEffect, no fetch, no loading state needed</span>
+<span class="kw">function</span> <span class="cn">UserProfile</span>({ id }) {
+  <span class="kw">const</span> { data, isLoading, error } = <span class="fn">useGetUserQuery</span>(id);
+  <span class="kw">if</span> (isLoading) <span class="kw">return</span> <span class="tag">&lt;Spinner /&gt;</span>;
+  <span class="kw">return</span> <span class="tag">&lt;h1&gt;</span>{data?.name}<span class="tag">&lt;/h1&gt;</span>;
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="qa-card" id="q12">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q12</span>
+        <span class="q-text">What are the differences between local component state and Redux state?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Understanding when to use local state vs Redux state is the most important architectural decision in a Redux app. The two systems exist side-by-side in almost every real Redux application — they solve different problems and should both be used appropriately.</p>
+        <ul>
+          <li>
+            <strong>Ownership and Scope:</strong> <em>Local state</em> (<code>useState</code>, <code>useReducer</code>) is <em>owned by a specific component</em>. Only that component and its direct children (via props) can access it. When the component unmounts, the state is destroyed. <em>Redux state</em> lives in the global store — it is accessible by <em>any component in the entire tree</em>, survives component unmounting, and persists for the lifetime of the page session (unless explicitly reset).
+          </li>
+          <li>
+            <strong>Data type and usage:</strong> Local state is ideal for <em>UI-specific, transient data</em> — whether a modal is open, the current value of a text input, which tab is active, a component's own loading/error status. Redux state is for <em>application-level, domain data</em> — the logged-in user, a list of products fetched from the API, the contents of a shopping cart, global notification messages.
+          </li>
+          <li>
+            <strong>Update mechanism:</strong> Local state is updated by calling a setter function (<code>setState</code>) directly in the component. Redux state is updated by dispatching an action that flows through a reducer — a more structured but more verbose process.
+          </li>
+          <li>
+            <strong>Boilerplate:</strong> Local state requires almost zero setup — one line with <code>useState</code>. Redux state requires defining a slice (initial state + reducers), exporting action creators, registering the reducer in the store, and then using <code>useSelector</code>/<code>useDispatch</code> in components. The overhead is only justified when the state genuinely needs to be global.
+          </li>
+          <li>
+            <strong>Debugging:</strong> Local state changes are only visible inside the component — you need React DevTools to inspect them. Redux state changes are tracked in Redux DevTools with a full history of every action, the before/after state diff, and the ability to replay any sequence.
+          </li>
+          <li>
+            <strong>Performance:</strong> Updating local state only re-renders the component that owns it and its children. Updating Redux state notifies all <code>useSelector</code> subscribers — components that select the changed slice re-render. Well-written selectors with precise selections minimise unnecessary re-renders.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — local vs redux state: side by side</div>
+          <pre><span class="cm">// ── LOCAL STATE — UI-specific, transient, component-owned ──</span>
+<span class="kw">function</span> <span class="cn">SearchBar</span>() {
+  <span class="kw">const</span> [query, setQuery]     = <span class="fn">useState</span>(<span class="str">''</span>);     <span class="cm">// input value → local</span>
+  <span class="kw">const</span> [focused, setFocused] = <span class="fn">useState</span>(<span class="kw">false</span>); <span class="cm">// focus state → local</span>
+  <span class="cm">// Nobody else needs to know about these</span>
+  <span class="kw">return</span> <span class="tag">&lt;input</span> <span class="at">value</span>={query} <span class="at">onChange</span>={e => <span class="fn">setQuery</span>(e.target.value)} <span class="tag">/&gt;</span>;
+}
+
+<span class="cm">// ── REDUX STATE — app-level, shared, persists across components ──</span>
+<span class="cm">// Needed in: Header (badge), CartPage, CheckoutPage, OrderSummary</span>
+<span class="kw">const</span> cartSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'cart'</span>,
+  initialState: { items: [] },
+  reducers: { addItem: (state, { payload }) => { state.items.<span class="fn">push</span>(payload); } }
+});
+
+<span class="cm">// Header reads cart without knowing about CartPage</span>
+<span class="kw">function</span> <span class="cn">Header</span>() {
+  <span class="kw">const</span> count = <span class="fn">useSelector</span>(s => s.cart.items.length); <span class="cm">// global read</span>
+  <span class="kw">return</span> <span class="tag">&lt;span&gt;</span>🛒 {count}<span class="tag">&lt;/span&gt;</span>;
+}
+
+<span class="cm">// ProductCard writes cart without knowing about Header</span>
+<span class="kw">function</span> <span class="cn">ProductCard</span>({ product }) {
+  <span class="kw">const</span> dispatch = <span class="fn">useDispatch</span>();
+  <span class="kw">return</span> <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">dispatch</span>(cartSlice.actions.<span class="fn">addItem</span>(product))}<span class="tag">&gt;</span>Add<span class="tag">&lt;/button&gt;</span>;
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="qa-card" id="q13">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q13</span>
+        <span class="q-text">What are the challenges or disadvantages of using Redux?</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Redux is a powerful tool, but it comes with real trade-offs. Knowing these shows balanced engineering judgment — and helps you make the right architectural decision for each project:</p>
+        <ul>
+          <li>
+            <strong>1. Boilerplate and Ceremony (even with RTK):</strong> Even with Redux Toolkit reducing classic Redux's verbosity, adding a new piece of state still requires: creating or updating a slice file (initial state, reducers), exporting action creators, registering the reducer in the store, and then using <code>useSelector</code>/<code>useDispatch</code> in components. For simple state that could be two lines of <code>useState</code>, this feels like significant overhead. The upfront cost is justified at scale, but painful for small features.
+          </li>
+          <li>
+            <strong>2. Steep Learning Curve:</strong> Redux introduces a lot of concepts that are non-trivial for beginners — the store, actions, action creators, action types, reducers, dispatch, selectors, middleware, thunks, slices, and the Provider pattern. React developers new to state management often find this overwhelming compared to the intuitive simplicity of <code>useState</code>.
+          </li>
+          <li>
+            <strong>3. Over-Engineering Risk:</strong> Redux is overkill for many applications. Reaching for it in a small to medium app adds unnecessary complexity and bundle size when Context API + <code>useState</code>/<code>useReducer</code> or a lightweight library like Zustand would serve perfectly. The common anti-pattern: putting every piece of state — including ephemeral UI state like form values and toggle flags — into Redux, when it should stay local.
+          </li>
+          <li>
+            <strong>4. Performance Pitfalls with Poorly Written Selectors:</strong> Every time any part of the Redux store updates, all <code>useSelector</code> calls re-evaluate their selector functions. If selectors are computing derived data on every call (like filtering or mapping an array) without memoisation, they trigger expensive recalculations on every unrelated state update. This requires using memoised selectors (via <code>createSelector</code> from Reselect, which RTK includes) — adding yet more code to write and maintain.
+          </li>
+          <li>
+            <strong>5. Async Logic Complexity:</strong> Handling asynchronous operations (API calls) in Redux requires middleware. With RTK, <code>createAsyncThunk</code> handles the common case, but complex async flows (race conditions, polling, cancellation, request deduplication) still require careful thought and often significant boilerplate — pending/fulfilled/rejected action cases for every API call.
+          </li>
+          <li>
+            <strong>6. Immutability Discipline (classic Redux):</strong> In classic Redux (without RTK/Immer), developers must manually write immutable update patterns — spread operators, array methods that return new arrays, never mutating nested objects directly. This is error-prone and verbose. RTK solves this with Immer, but it's still a concept developers must understand.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — redux vs zustand: same feature, different complexity</div>
+          <pre><span class="cm">// ── Redux Toolkit — necessary for large app, overkill for small ──</span>
+<span class="cm">// counterSlice.js</span>
+<span class="kw">const</span> counterSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'counter'</span>, initialState: { value: <span class="at">0</span> },
+  reducers: { increment: state => { state.value++; } }
+});
+<span class="kw">export const</span> { increment } = counterSlice.actions;
+<span class="kw">export default</span> counterSlice.reducer;
+<span class="cm">// + configureStore + Provider + useSelector + useDispatch in component</span>
+
+<span class="cm">// ── Zustand — same result, 80% less code ──</span>
+<span class="kw">const</span> useCounter = <span class="fn">create</span>(set => ({
+  value:     <span class="at">0</span>,
+  increment: () => <span class="fn">set</span>(s => ({ value: s.value + <span class="at">1</span> })),
+}));
+<span class="cm">// Usage: const { value, increment } = useCounter();</span>
+<span class="cm">// No Provider, no slice file, no separate store config needed</span></pre>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section redux2 -->
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SECTION: Redux — Short Answers                               -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="section" id="section-redux3">
+    <div class="section-header">
+      <div class="section-dot"></div>
+      <div class="section-title">Redux — Short Answers</div>
+      <div class="section-count">10 Qs</div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="qa-card" id="q14">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q14</span>
+        <span class="q-text">What is the Provider component? How do components get state from the Redux store?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>The <strong><code>&lt;Provider&gt;</code></strong> is a React component from the <code>react-redux</code> library. Its sole job is to make the Redux store available to every component in the application — without having to pass the store manually as a prop through every level of the component tree. It uses React's Context API internally to broadcast the store reference to all descendants.</p>
+        <p><strong>How it works:</strong> You wrap your entire app (or the relevant subtree) in <code>&lt;Provider store={store}&gt;</code> — typically in <code>main.jsx</code> or <code>index.js</code>. Once wrapped, any component anywhere in the tree can subscribe to the store using the <code>useSelector</code> and <code>useDispatch</code> hooks from <code>react-redux</code>.</p>
+        <p><strong>How components get state from the store — the two-step process:</strong></p>
+        <ul>
+          <li><strong>Step 1 — <code>useSelector(selectorFn)</code>:</strong> The component calls <code>useSelector</code> with a selector function. The selector receives the <em>entire</em> Redux state tree and returns only the specific slice that component needs. <code>react-redux</code> registers the component as a subscriber — whenever that selected slice changes, the component re-renders. When it doesn't change, the component is skipped — this is what makes Redux efficient.</li>
+          <li><strong>Step 2 — <code>useDispatch()</code>:</strong> Returns the store's <code>dispatch</code> function. The component calls <code>dispatch(action)</code> to trigger state changes. The action flows through reducers, the store updates, and all affected <code>useSelector</code> subscribers re-render automatically.</li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — provider setup and component state access</div>
+          <pre><span class="cm">// main.jsx — Provider wraps entire app ONCE</span>
+<span class="kw">import</span> { Provider } <span class="kw">from</span> <span class="str">'react-redux'</span>;
+<span class="kw">import</span> { store }    <span class="kw">from</span> <span class="str">'./store/store'</span>;
+
+ReactDOM.<span class="fn">createRoot</span>(document.<span class="fn">getElementById</span>(<span class="str">'root'</span>)).<span class="fn">render</span>(
+  <span class="tag">&lt;Provider</span> <span class="at">store</span>={store}<span class="tag">&gt;</span>   <span class="cm">// ← makes store available to ALL descendants</span>
+    <span class="tag">&lt;App /&gt;</span>
+  <span class="tag">&lt;/Provider&gt;</span>
+);
+
+<span class="cm">// Any component — reads from store, no props needed</span>
+<span class="kw">function</span> <span class="cn">CartBadge</span>() {
+  <span class="cm">// useSelector — subscribes to cart.items.length</span>
+  <span class="cm">// Only re-renders when that specific value changes</span>
+  <span class="kw">const</span> itemCount = <span class="fn">useSelector</span>(state => state.cart.items.length);
+  <span class="kw">return</span> <span class="tag">&lt;span&gt;</span>🛒 {itemCount}<span class="tag">&lt;/span&gt;</span>;
+}
+
+<span class="kw">function</span> <span class="cn">AddButton</span>({ product }) {
+  <span class="kw">const</span> dispatch = <span class="fn">useDispatch</span>(); <span class="cm">// ← get dispatch from Provider's store</span>
+  <span class="kw">return</span> (
+    <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">dispatch</span>({ type: <span class="str">'cart/addItem'</span>, payload: product })}<span class="tag">&gt;</span>
+      Add to Cart
+    <span class="tag">&lt;/button&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="qa-card" id="q15">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q15</span>
+        <span class="q-text">What is the role of the connect() function in React-Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p><code>connect()</code> is the <strong>older, class-component-era API</strong> from <code>react-redux</code> for connecting a component to the Redux store. Before hooks were introduced (pre-React 16.8), <code>connect()</code> was the primary — and only — way to give a React component access to the Redux store. It is a <em>Higher-Order Component (HOC)</em> factory — it takes configuration functions and returns an HOC that wraps your component.</p>
+        <p><strong>Signature:</strong></p>
+        <div class="code-block">
+          <div class="code-label">jsx — connect signature</div>
+          <pre><span class="kw">const</span> ConnectedComponent = <span class="fn">connect</span>(mapStateToProps, mapDispatchToProps)(MyComponent);</pre>
+        </div>
+        <p><strong>What the two arguments do:</strong></p>
+        <ul>
+          <li><strong><code>mapStateToProps(state)</code>:</strong> A function that receives the full Redux state tree and returns an object. The key-value pairs of this object become <em>additional props</em> on the wrapped component — giving it read access to the store slices it needs. Equivalent to <code>useSelector</code> in the modern hooks API.</li>
+          <li><strong><code>mapDispatchToProps(dispatch)</code>:</strong> A function (or object) that receives the <code>dispatch</code> function and returns an object. The returned key-value pairs become <em>additional props</em> that are functions the component can call to dispatch actions. Equivalent to <code>useDispatch</code> in the modern hooks API.</li>
+        </ul>
+        <p><strong>Today's recommendation:</strong> In all new code, use <code>useSelector</code> and <code>useDispatch</code> hooks — they are simpler, require less code, and work only in functional components. <code>connect()</code> is still valid but considered legacy and you'll mainly encounter it in older codebases or when working with class components that cannot use hooks.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — connect() vs modern hooks</div>
+          <pre><span class="cm">// ── Legacy: connect() HOC approach ──</span>
+<span class="kw">import</span> { connect } <span class="kw">from</span> <span class="str">'react-redux'</span>;
+
+<span class="kw">function</span> <span class="cn">CartButton</span>({ itemCount, onAddItem }) { <span class="cm">// ← props injected by connect</span>
+  <span class="kw">return</span> <span class="tag">&lt;button</span> <span class="at">onClick</span>={onAddItem}<span class="tag">&gt;</span>Cart ({itemCount})<span class="tag">&lt;/button&gt;</span>;
+}
+
+<span class="kw">const</span> <span class="fn">mapStateToProps</span> = state => ({
+  itemCount: state.cart.items.length,  <span class="cm">// ← becomes this.props.itemCount</span>
+});
+
+<span class="kw">const</span> <span class="fn">mapDispatchToProps</span> = dispatch => ({
+  onAddItem: item => <span class="fn">dispatch</span>({ type: <span class="str">'cart/addItem'</span>, payload: item }),
+});
+
+<span class="kw">export default</span> <span class="fn">connect</span>(mapStateToProps, mapDispatchToProps)(CartButton);
+
+<span class="cm">// ── Modern: hooks (same result, half the code) ──</span>
+<span class="kw">function</span> <span class="cn">CartButton</span>() {
+  <span class="kw">const</span> itemCount = <span class="fn">useSelector</span>(state => state.cart.items.length);
+  <span class="kw">const</span> dispatch  = <span class="fn">useDispatch</span>();
+  <span class="kw">return</span> (
+    <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">dispatch</span>({ type: <span class="str">'cart/addItem'</span> })}<span class="tag">&gt;</span>
+      Cart ({itemCount})
+    <span class="tag">&lt;/button&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="qa-card" id="q16">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q16</span>
+        <span class="q-text">What are the 4 important files in a React-Redux project?</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>A well-structured React-Redux project (using Redux Toolkit) typically organises its code around these four types of files. Each has a distinct responsibility in the Redux architecture:</p>
+        <ul>
+          <li>
+            <strong>1. Slice File (e.g., <code>store/cartSlice.js</code>):</strong> Created using RTK's <code>createSlice()</code>. This is the most important file per feature — it defines the <em>initial state</em>, all <em>reducer functions</em> (state transitions), and auto-exports <em>action creators</em>. One slice per domain/feature: <code>authSlice.js</code>, <code>cartSlice.js</code>, <code>notifSlice.js</code>. This is where all state logic lives.
+          </li>
+          <li>
+            <strong>2. Store Configuration File (<code>store/store.js</code>):</strong> Created using RTK's <code>configureStore()</code>. This file imports all slice reducers and combines them into the single root store. It is the central registry — the single place where all slices are registered. You import and export the <code>store</code> object from here.
+          </li>
+          <li>
+            <strong>3. Entry Point File (<code>main.jsx</code> / <code>index.js</code>):</strong> The application bootstrap file that wraps the entire <code>&lt;App /&gt;</code> in the <code>&lt;Provider store={store}&gt;</code> component. This grants every component in the tree access to the Redux store. This file changes minimally — it just needs the Provider wrapper added once.
+          </li>
+          <li>
+            <strong>4. Component File (e.g., <code>components/CartPage.jsx</code>):</strong> The React component that <em>consumes</em> Redux state. It imports action creators from the relevant slice and uses <code>useSelector</code> to read state and <code>useDispatch</code> to trigger updates. Components should contain zero reducer logic — they only call the store's API.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">folder — redux project structure</div>
+          <pre>src/
+├── main.jsx                 <span class="cm">← File 3: Provider wraps App</span>
+├── App.jsx
+├── store/
+│   ├── store.js             <span class="cm">← File 2: configureStore + all reducers</span>
+│   ├── cartSlice.js         <span class="cm">← File 1: state + reducers + actions (cart)</span>
+│   ├── authSlice.js         <span class="cm">← File 1: state + reducers + actions (auth)</span>
+│   └── notifSlice.js        <span class="cm">← File 1: state + reducers + actions (notif)</span>
+└── components/
+    ├── CartPage.jsx         <span class="cm">← File 4: useSelector + useDispatch</span>
+    ├── Header.jsx           <span class="cm">← File 4: reads cart count via useSelector</span>
+    └── LoginForm.jsx        <span class="cm">← File 4: dispatches auth actions</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="qa-card" id="q17">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q17</span>
+        <span class="q-text">How to structure the project and maintain state in multiple components?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>The recommended architecture for a Redux project is <strong>"Feature Slices"</strong> (also called the "Ducks" pattern or "Redux Toolkit's slice pattern") — organising your store code by feature/domain rather than by type of file. This keeps related logic co-located and scales naturally as the app grows.</p>
+        <p><strong>Key structural guidelines:</strong></p>
+        <ul>
+          <li><strong>One slice per domain:</strong> Each major feature (auth, cart, products, notifications, UI) gets its own slice file containing all the state, reducer, and action logic for that domain. This makes it easy to find everything related to one feature in one place.</li>
+          <li><strong>Selectors close to the slice:</strong> Define reusable selector functions in the same slice file or a companion <code>selectors.js</code> file. This prevents <code>state.cart.items.filter(...)` logic from being duplicated across every component that needs derived cart data.</code></li>
+          <li><strong>Async thunks in the slice:</strong> Using <code>createAsyncThunk</code>, define API call thunks in the same slice file as the state they affect. The thunk's pending/fulfilled/rejected cases are handled in <code>extraReducers</code>.</li>
+          <li><strong>Components only import from slices:</strong> Components import action creators and selectors from slice files — they never define their own Redux logic. This enforces separation of concerns.</li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — feature-based slice with selectors and thunks</div>
+          <pre><span class="cm">// store/productsSlice.js — all products logic in one file</span>
+<span class="kw">import</span> { createSlice, createAsyncThunk } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>;
+
+<span class="cm">// Async thunk — API call lives with the slice</span>
+<span class="kw">export const</span> <span class="fn">fetchProducts</span> = <span class="fn">createAsyncThunk</span>(<span class="str">'products/fetch'</span>, <span class="kw">async</span> () => {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/products'</span>);
+  <span class="kw">return</span> res.<span class="fn">json</span>();
+});
+
+<span class="kw">const</span> productsSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'products'</span>,
+  initialState: { items: [], loading: <span class="kw">false</span>, error: <span class="kw">null</span> },
+  reducers: {
+    setFilter: (state, { payload }) => { state.filter = payload; },
+  },
+  extraReducers: (builder) => {
+    builder
+      .<span class="fn">addCase</span>(fetchProducts.pending,   state => { state.loading = <span class="kw">true</span>; })
+      .<span class="fn">addCase</span>(fetchProducts.fulfilled, (state, { payload }) => {
+        state.loading = <span class="kw">false</span>; state.items = payload;
+      })
+      .<span class="fn">addCase</span>(fetchProducts.rejected,  (state, { error }) => {
+        state.loading = <span class="kw">false</span>; state.error = error.message;
+      });
+  },
+});
+
+<span class="cm">// Selectors defined in the same file — reusable across components</span>
+<span class="kw">export const</span> selectAllProducts  = state => state.products.items;
+<span class="kw">export const</span> selectProductCount = state => state.products.items.length;
+<span class="kw">export const</span> selectIsLoading    = state => state.products.loading;
+
+<span class="kw">export const</span> { setFilter } = productsSlice.actions;
+<span class="kw">export default</span> productsSlice.reducer;
+
+<span class="cm">// Component — imports everything from the slice</span>
+<span class="kw">import</span> { fetchProducts, selectAllProducts, selectIsLoading } <span class="kw">from</span> <span class="str">'../store/productsSlice'</span>;
+<span class="kw">function</span> <span class="cn">ProductList</span>() {
+  <span class="kw">const</span> dispatch  = <span class="fn">useDispatch</span>();
+  <span class="kw">const</span> products  = <span class="fn">useSelector</span>(selectAllProducts);
+  <span class="kw">const</span> isLoading = <span class="fn">useSelector</span>(selectIsLoading);
+  <span class="fn">useEffect</span>(() => { <span class="fn">dispatch</span>(<span class="fn">fetchProducts</span>()); }, [dispatch]);
+  <span class="kw">if</span> (isLoading) <span class="kw">return</span> <span class="tag">&lt;Spinner /&gt;</span>;
+  <span class="kw">return</span> products.<span class="fn">map</span>(p => <span class="tag">&lt;ProductCard</span> <span class="at">key</span>={p.id} <span class="at">product</span>={p} <span class="tag">/&gt;</span>);
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="qa-card" id="q18">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q18</span>
+        <span class="q-text">Explain the concept of immutability in the context of Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p><strong>Immutability</strong> means that once a data structure is created, it cannot be modified in place. Instead of changing an existing object, you create a <em>new object</em> with the desired changes — the original remains untouched.</p>
+        <p><strong>Why Redux requires immutable state updates:</strong></p>
+        <ul>
+          <li><strong>Change detection:</strong> Redux (and React) detect state changes by <em>reference equality</em> — comparing whether <code>oldState === newState</code>. If you mutate the existing state object directly (<code>state.items.push(x)</code>), the reference stays the same — Redux thinks nothing changed and doesn't trigger re-renders. Returning a new object ensures the reference changes, reliably signalling an update.</li>
+          <li><strong>Time-travel debugging:</strong> Redux DevTools stores a history of every previous state snapshot. If state were mutated in place, every historical snapshot would reflect the current (mutated) state — the history would be corrupted. Immutability guarantees that each saved snapshot is preserved exactly as it was.</li>
+          <li><strong>Predictability and pure functions:</strong> Immutability enforces that reducers are truly pure — they take inputs and return a new value without side effects. This makes them trivially testable and guarantees the same input always produces the same output.</li>
+        </ul>
+        <p><strong>Redux Toolkit and Immer:</strong> RTK uses the <em>Immer</em> library internally. Immer wraps your reducer's state in a JavaScript Proxy — letting you write seemingly mutating code (<code>state.count++</code>) while Immer intercepts each "mutation" and produces a safe, new immutable state behind the scenes. This gives you the simplicity of mutable-style code with the safety of immutability.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — immutability: wrong vs correct vs RTK immer</div>
+          <pre><span class="cm">// ❌ WRONG — mutating state directly (same reference, no re-render)</span>
+<span class="kw">case</span> <span class="str">'addItem'</span>:
+  state.items.<span class="fn">push</span>(action.payload);  <span class="cm">// mutates! reference unchanged</span>
+  <span class="kw">return</span> state;                        <span class="cm">// Redux sees no change → no re-render</span>
+
+<span class="cm">// ✅ CORRECT classic Redux — return a new object (new reference)</span>
+<span class="kw">case</span> <span class="str">'addItem'</span>:
+  <span class="kw">return</span> {
+    ...state,                               <span class="cm">// spread creates new object</span>
+    items: [...state.items, action.payload] <span class="cm">// new array</span>
+  };
+
+<span class="cm">// ✅ RTK with Immer — write "mutations", Immer produces new state safely</span>
+<span class="kw">const</span> cartSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'cart'</span>,
+  initialState: { items: [] },
+  reducers: {
+    addItem: (state, { payload }) => {
+      state.items.<span class="fn">push</span>(payload); <span class="cm">// Immer intercepts → safe immutable update ✅</span>
+    },
+    updatePrice: (state, { payload: { id, price } }) => {
+      <span class="kw">const</span> item = state.items.<span class="fn">find</span>(i => i.id === id);
+      <span class="kw">if</span> (item) item.price = price; <span class="cm">// Immer handles nested mutation safely ✅</span>
+    },
+  },
+});</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q19 -->
+    <div class="qa-card" id="q19">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q19</span>
+        <span class="q-text">What are the typical properties of an Action object in React-Redux?</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>An <strong>action object</strong> in Redux is a plain JavaScript object that describes <em>what happened</em> in the application. Redux and the Flux Standard Action (FSA) community have established a conventional structure for action objects to ensure consistency across codebases.</p>
+        <p><strong>Properties of a standard action object:</strong></p>
+        <ul>
+          <li>
+            <strong><code>type</code> (required — string):</strong> The only <em>mandatory</em> property. A string identifier that uniquely names the event. By convention, it uses the format <code>'sliceName/actionName'</code> (e.g., <code>'cart/addItem'</code>, <code>'auth/logout'</code>). The reducer uses this to decide which state transformation to apply. In RTK, this is auto-generated from your slice name and reducer key.
+          </li>
+          <li>
+            <strong><code>payload</code> (optional — any value):</strong> Any additional data required to perform the state update. This is the "content" of the action — the product to add to the cart, the user data returned from an API, the ID of the item to delete. By the FSA convention, all action data (beyond the type) goes in <code>payload</code> — keeping the action shape predictable. RTK enforces this convention automatically.
+          </li>
+          <li>
+            <strong><code>error</code> (optional — boolean):</strong> If <code>true</code>, signals that the action represents a failure/error condition. When <code>error: true</code>, the <code>payload</code> should be an <code>Error</code> object. RTK's <code>createAsyncThunk</code> uses this convention for rejected actions.
+          </li>
+          <li>
+            <strong><code>meta</code> (optional — any value):</strong> Extra information about the action that doesn't belong in the payload — things like timestamps, request IDs, or middleware-specific flags. Not commonly used in most apps.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — action object anatomy</div>
+          <pre><span class="cm">// Minimal action — only required property</span>
+{ type: <span class="str">'auth/logout'</span> }
+
+<span class="cm">// Standard action with payload</span>
+{
+  type:    <span class="str">'cart/addItem'</span>,
+  payload: { id: <span class="at">1</span>, name: <span class="str">'MacBook Pro'</span>, price: <span class="at">1999</span>, qty: <span class="at">1</span> }
+}
+
+<span class="cm">// Error action (FSA convention)</span>
+{
+  type:    <span class="str">'products/fetchFailed'</span>,
+  payload: <span class="kw">new</span> <span class="fn">Error</span>(<span class="str">'Network timeout'</span>),
+  error:   <span class="kw">true</span>
+}
+
+<span class="cm">// Action with meta (uncommon but valid)</span>
+{
+  type:    <span class="str">'analytics/pageView'</span>,
+  payload: { page: <span class="str">'/dashboard'</span> },
+  meta:    { timestamp: Date.<span class="fn">now</span>(), sessionId: <span class="str">'abc123'</span> }
+}
+
+<span class="cm">// RTK-generated action (from cartSlice.actions.addItem)</span>
+<span class="cm">// calling addItem({ id: 1, name: 'Laptop' }) produces:</span>
+{
+  type:    <span class="str">'cart/addItem'</span>,       <span class="cm">// auto-generated: 'sliceName/reducerName'</span>
+  payload: { id: <span class="at">1</span>, name: <span class="str">'Laptop'</span> } <span class="cm">// whatever you pass as argument</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="qa-card" id="q20">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q20</span>
+        <span class="q-text">What is the difference between mapDispatchToProps and mapStateToProps in connect()?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Both are configuration functions passed to the legacy <code>connect()</code> HOC, but they serve opposite purposes — one is for <em>reading</em> from the store, the other for <em>writing</em> to it.</p>
+        <ul>
+          <li>
+            <strong><code>mapStateToProps(state, ownProps)</code> — Read (store → props):</strong> Receives the complete Redux state tree as its first argument (and optionally the component's own props as the second). It returns a plain object whose properties are merged into the wrapped component's props — giving the component read access to specific slices of Redux state. React-Redux calls this function every time the store state changes and checks whether the returned object has changed — if it has, the component re-renders. It is the <code>connect()</code>-era equivalent of <code>useSelector</code>.
+          </li>
+          <li>
+            <strong><code>mapDispatchToProps(dispatch, ownProps)</code> — Write (actions → props):</strong> Receives the store's <code>dispatch</code> function as its first argument. It returns an object of functions — each one calls <code>dispatch</code> with a specific action. These functions are merged into the component's props as event-handler-style callbacks, allowing the component to trigger state changes without knowing about dispatch directly. It is the <code>connect()</code>-era equivalent of <code>useDispatch</code>. Can also be passed as a plain object of action creators — <code>connect()</code> automatically wraps them with <code>dispatch</code>.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — mapStateToProps vs mapDispatchToProps</div>
+          <pre><span class="kw">import</span> { connect }   <span class="kw">from</span> <span class="str">'react-redux'</span>;
+<span class="kw">import</span> { addItem, removeItem } <span class="kw">from</span> <span class="str">'../store/cartSlice'</span>;
+
+<span class="cm">// The component — receives everything as props</span>
+<span class="kw">function</span> <span class="cn">CartPage</span>({ cartItems, total, onAddItem, onRemoveItem }) {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Total: ₹{total}<span class="tag">&lt;/p&gt;</span>
+      {cartItems.<span class="fn">map</span>(item => (
+        <span class="tag">&lt;div</span> <span class="at">key</span>={item.id}<span class="tag">&gt;</span>
+          {item.name}
+          <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">onRemoveItem</span>(item.id)}<span class="tag">&gt;</span>Remove<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      ))}
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="cm">// READ from store → inject as props</span>
+<span class="kw">const</span> <span class="fn">mapStateToProps</span> = state => ({
+  cartItems: state.cart.items,     <span class="cm">// ← prop: cartItems</span>
+  total:     state.cart.total,     <span class="cm">// ← prop: total</span>
+});
+
+<span class="cm">// WRITE to store → inject action dispatchers as props</span>
+<span class="kw">const</span> <span class="fn">mapDispatchToProps</span> = dispatch => ({
+  onAddItem:    item => <span class="fn">dispatch</span>(<span class="fn">addItem</span>(item)),    <span class="cm">// ← prop: onAddItem()</span>
+  onRemoveItem: id   => <span class="fn">dispatch</span>(<span class="fn">removeItem</span>(id)),  <span class="cm">// ← prop: onRemoveItem()</span>
+});
+
+<span class="cm">// Shorthand — pass object of action creators, connect auto-wraps</span>
+<span class="cm">// const mapDispatchToProps = { addItem, removeItem };</span>
+
+<span class="kw">export default</span> <span class="fn">connect</span>(mapStateToProps, mapDispatchToProps)(CartPage);</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q21 -->
+    <div class="qa-card" id="q21">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q21</span>
+        <span class="q-text">What is the meaning of Unidirectional Data Flow in Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p><strong>Unidirectional Data Flow</strong> means data in a Redux application can only travel in <em>one direction</em> around a fixed, predictable cycle — never backwards, never sideways between components directly. This constraint is what makes Redux apps highly predictable and debuggable.</p>
+        <p>The one-way cycle is: <strong>Action → Reducer → Store → UI → Action → ...</strong></p>
+        <ul>
+          <li><strong>UI triggers an action:</strong> A user interaction (click, submit, input change) causes the component to dispatch an action — a plain description of what happened.</li>
+          <li><strong>Action flows to the reducer:</strong> The store passes the action to the reducer function. The reducer examines the action type and computes a new state. Data flows <em>forward</em> — never back to the component that dispatched it.</li>
+          <li><strong>Reducer updates the store:</strong> The new state returned by the reducer replaces the old state in the store. The store now holds the authoritative, updated truth.</li>
+          <li><strong>Store notifies subscribed components:</strong> Components subscribed via <code>useSelector</code> are notified. They re-render with the new state data — the UI updates to reflect the new store state.</li>
+        </ul>
+        <p><strong>Why unidirectional flow matters:</strong></p>
+        <ul>
+          <li><strong>Predictability:</strong> Given any action, you know exactly where it goes (reducer), what it does (computed by a pure function), and what updates (all subscribed components). There are no surprises.</li>
+          <li><strong>Debuggability:</strong> Because data only flows one way, you can intercept it at any point in the cycle. Redux DevTools shows you every action, the state before, and the state after — making it trivial to find the exact action that caused a bug.</li>
+          <li><strong>No "data spaghetti":</strong> Unlike two-way data binding (Angular's older approach), there's no risk of cascading, circular updates where A updates B which updates A again.</li>
+        </ul>
+        <div class="flow">
+          <div class="flow-box">👆 User Event</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">dispatch(action)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Reducer</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Store (new state)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">UI Re-renders</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">👆 Next Event</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q22 -->
+    <div class="qa-card" id="q22">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q22</span>
+        <span class="q-text">How does Redux handle communication between components?</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Redux handles inter-component communication through the <strong>shared store</strong> — not through direct component-to-component messaging. Components never communicate with each other directly. Instead, they all communicate <em>indirectly via the store</em>, which acts as the central hub.</p>
+        <p><strong>The pattern — any component can speak to any other through the store:</strong></p>
+        <ul>
+          <li><strong>Component A (sender):</strong> Dispatches an action to the store — e.g., user adds an item to cart.</li>
+          <li><strong>The store:</strong> Processes the action through the reducer, updates its state.</li>
+          <li><strong>Component B (receiver):</strong> Has a <code>useSelector</code> subscribed to the cart state. When it changes, Component B re-renders automatically with the new data.</li>
+        </ul>
+        <p>Component A and Component B don't know about each other. They're completely decoupled — they only interact with the store. This is what makes Redux so scalable: you can add new components that read or write to any part of the store without touching existing components.</p>
+        <p><strong>Contrast with prop drilling:</strong> Without Redux, Component A would need to pass data up to a common ancestor, which passes it back down to Component B through props — potentially through many intermediate components. Redux eliminates this entirely.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — decoupled communication via store</div>
+          <pre><span class="cm">// Component A — ProductCard (anywhere in the tree)</span>
+<span class="cm">// Dispatches to store — doesn't know about Header or CartPage</span>
+<span class="kw">function</span> <span class="cn">ProductCard</span>({ product }) {
+  <span class="kw">const</span> dispatch = <span class="fn">useDispatch</span>();
+  <span class="kw">return</span> (
+    <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => <span class="fn">dispatch</span>(<span class="fn">addItem</span>(product))}<span class="tag">&gt;</span>
+      Add to Cart
+    <span class="tag">&lt;/button&gt;</span>
+  );
+}
+
+<span class="cm">// Component B — Header (completely separate branch of the tree)</span>
+<span class="cm">// Automatically updates when cart changes — doesn't know about ProductCard</span>
+<span class="kw">function</span> <span class="cn">Header</span>() {
+  <span class="kw">const</span> count = <span class="fn">useSelector</span>(s => s.cart.items.length);
+  <span class="kw">return</span> <span class="tag">&lt;span&gt;</span>🛒 {count} items<span class="tag">&lt;/span&gt;</span>;
+}
+
+<span class="cm">// Component C — CartPage (another branch)</span>
+<span class="cm">// Also automatically updated — no connection to ProductCard</span>
+<span class="kw">function</span> <span class="cn">CartPage</span>() {
+  <span class="kw">const</span> items = <span class="fn">useSelector</span>(s => s.cart.items);
+  <span class="kw">return</span> <span class="tag">&lt;ul&gt;</span>{items.<span class="fn">map</span>(i => <span class="tag">&lt;li</span> <span class="at">key</span>={i.id}<span class="tag">&gt;</span>{i.name}<span class="tag">&lt;/li&gt;</span>)}<span class="tag">&lt;/ul&gt;</span>;
+}
+
+<span class="cm">// A → Store → B and C simultaneously, with zero direct coupling</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q23 -->
+    <div class="qa-card" id="q23">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q23</span>
+        <span class="q-text">What is the payload property in Redux?</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>The <strong><code>payload</code></strong> property is the conventional field in a Redux action object that carries the <em>data</em> associated with an action. While the <code>type</code> field answers "what happened?", the <code>payload</code> answers "with what data?".</p>
+        <p><strong>Key characteristics:</strong></p>
+        <ul>
+          <li><strong>Optional but standard:</strong> Not all actions need a payload — actions like <code>'auth/logout'</code> or <code>'cart/clearCart'</code> just need a type to trigger a state change. But whenever additional data is needed to compute the new state, it goes in <code>payload</code>.</li>
+          <li><strong>Can be any JavaScript value:</strong> A primitive (number, string, boolean), an object, an array, or <code>null</code>. Whatever the reducer needs to do its job.</li>
+          <li><strong>Convention from Flux Standard Actions (FSA):</strong> The <code>payload</code> key name is a widely adopted convention — it keeps action objects consistent and predictable. Before FSA, different projects used different keys (<code>data</code>, <code>item</code>, <code>value</code>) making codebases inconsistent.</li>
+          <li><strong>RTK always uses <code>payload</code>:</strong> When you define reducers with <code>createSlice</code>, RTK automatically puts the argument you pass to an action creator into <code>action.payload</code>. This is automatic and consistent — you don't need to manually wrap data in a payload object.</li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — payload in action objects and reducers</div>
+          <pre><span class="cm">// Actions with different payload types</span>
+<span class="fn">dispatch</span>({ type: <span class="str">'auth/logout'</span> });                   <span class="cm">// no payload needed</span>
+<span class="fn">dispatch</span>({ type: <span class="str">'counter/setTo'</span>, payload: <span class="at">42</span> });    <span class="cm">// number payload</span>
+<span class="fn">dispatch</span>({ type: <span class="str">'cart/addItem'</span>,  payload: { id: <span class="at">1</span>, name: <span class="str">'Laptop'</span> } }); <span class="cm">// object payload</span>
+<span class="fn">dispatch</span>({ type: <span class="str">'tags/setTags'</span>,  payload: [<span class="str">'react'</span>, <span class="str">'redux'</span>] }); <span class="cm">// array payload</span>
+
+<span class="cm">// Reducer reads payload from action</span>
+<span class="kw">const</span> counterSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'counter'</span>,
+  initialState: { value: <span class="at">0</span> },
+  reducers: {
+    incrementBy: (state, action) => {
+      state.value += action.payload;  <span class="cm">// ← reads from action.payload</span>
+    },
+    <span class="cm">// Destructured — cleaner</span>
+    setTo: (state, { payload }) => {
+      state.value = payload;          <span class="cm">// ← destructure payload directly</span>
+    },
+  },
+});
+
+<span class="cm">// RTK auto-wraps in payload:</span>
+<span class="fn">dispatch</span>(counterSlice.actions.<span class="fn">setTo</span>(<span class="at">100</span>));
+<span class="cm">// Produces: { type: 'counter/setTo', payload: 100 }</span></pre>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section redux3 -->
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION: Redux — Thunk / Middleware / Error Handling / Flux          -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="section" id="section-redux4">
+    <div class="section-header">
+      <div class="section-dot"></div>
+      <div class="section-title">Thunk / Middleware / Error Handling / Flux</div>
+      <div class="section-count">5 Qs</div>
+    </div>
+
+    <!-- Q24 -->
+    <div class="qa-card" id="q24">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q24</span>
+        <span class="q-text">What is the difference between a Regular Action Creator and a Thunk Action Creator?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>The fundamental difference is what they <em>return</em> — and therefore what kinds of operations they can handle.</p>
+        <p><strong>Regular Action Creator — synchronous, returns an object:</strong></p>
+        <p>A regular action creator is a plain function that returns a <em>plain action object</em> with a <code>type</code> and optional <code>payload</code>. It is <em>synchronous</em> — it does its job instantly and returns the result immediately. Redux's store can receive and process this object directly. Use regular action creators for any state change that doesn't require waiting for anything — UI updates, toggle flags, setting a value.</p>
+        <p><strong>Thunk Action Creator — asynchronous, returns a function:</strong></p>
+        <p>A thunk action creator returns a <em>function</em> instead of an object. This inner function receives <code>dispatch</code> and <code>getState</code> as arguments — allowing it to perform asynchronous operations (API calls, timeouts, etc.) and dispatch <em>multiple actions</em> at different points in time (e.g., dispatch "loading started", await the fetch, then dispatch "success" or "failure"). The <code>redux-thunk</code> middleware intercepts functions returned from dispatch calls and executes them — regular Redux only accepts plain objects.</p>
+        <p>In RTK, <code>createAsyncThunk</code> generates thunks automatically — it handles the pending/fulfilled/rejected action lifecycle for you.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — regular vs thunk action creator</div>
+          <pre><span class="cm">// ── Regular Action Creator — synchronous, returns object ──</span>
+<span class="kw">const</span> <span class="fn">setUser</span> = (user) => ({          <span class="cm">// returns plain object</span>
+  type:    <span class="str">'auth/setUser'</span>,
+  payload: user,
+});
+<span class="fn">dispatch</span>(<span class="fn">setUser</span>({ id: <span class="at">1</span>, name: <span class="str">'Riya'</span> })); <span class="cm">// dispatches immediately</span>
+
+<span class="cm">// ── Thunk Action Creator — async, returns a function ──</span>
+<span class="kw">const</span> <span class="fn">loginUser</span> = (credentials) => <span class="kw">async</span> (dispatch, getState) => {
+  <span class="cm">// 1. Dispatch loading state</span>
+  <span class="fn">dispatch</span>({ type: <span class="str">'auth/setLoading'</span>, payload: <span class="kw">true</span> });
+
+  <span class="kw">try</span> {
+    <span class="cm">// 2. Perform async API call</span>
+    <span class="kw">const</span> res  = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/login'</span>, {
+      method: <span class="str">'POST'</span>, body: <span class="fn">JSON</span>.<span class="fn">stringify</span>(credentials)
+    });
+    <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+    <span class="cm">// 3. Dispatch success</span>
+    <span class="fn">dispatch</span>(<span class="fn">setUser</span>(data.user));
+  } <span class="kw">catch</span> (error) {
+    <span class="cm">// 4. Dispatch failure</span>
+    <span class="fn">dispatch</span>({ type: <span class="str">'auth/setError'</span>, payload: error.message });
+  } <span class="kw">finally</span> {
+    <span class="fn">dispatch</span>({ type: <span class="str">'auth/setLoading'</span>, payload: <span class="kw">false</span> });
+  }
+};
+<span class="fn">dispatch</span>(<span class="fn">loginUser</span>({ email: <span class="str">'a@b.com'</span>, password: <span class="str">'...'</span> })); <span class="cm">// thunk-thunk</span>
+
+<span class="cm">// ── RTK createAsyncThunk — auto-handles pending/fulfilled/rejected ──</span>
+<span class="kw">export const</span> <span class="fn">loginUser</span> = <span class="fn">createAsyncThunk</span>(<span class="str">'auth/login'</span>, <span class="kw">async</span> (credentials) => {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/login'</span>, { method: <span class="str">'POST'</span>, body: <span class="fn">JSON</span>.<span class="fn">stringify</span>(credentials) });
+  <span class="kw">return</span> res.<span class="fn">json</span>(); <span class="cm">// becomes action.payload on fulfilled</span>
+});</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q25 -->
+    <div class="qa-card" id="q25">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q25</span>
+        <span class="q-text">Explain the concept of Middleware in React-Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p><strong>Middleware</strong> in Redux is a way to extend the store's capabilities by inserting custom logic into the <em>dispatch pipeline</em> — the path an action travels from when you call <code>dispatch(action)</code> to when it reaches the reducer. Middleware sits in the middle of this pipeline and can intercept, inspect, transform, delay, or even stop actions before they reach the reducer.</p>
+        <p><strong>The dispatch pipeline with middleware:</strong></p>
+        <div class="flow">
+          <div class="flow-box">dispatch(action)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Middleware 1</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Middleware 2</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Reducer</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">New State</div>
+        </div>
+        <p><strong>Common middleware use cases:</strong></p>
+        <ul>
+          <li><strong>redux-thunk (built into RTK):</strong> Allows dispatching functions (thunks) instead of plain objects — enabling async operations. This is the most commonly used middleware and is included by default in RTK's <code>configureStore</code>.</li>
+          <li><strong>Logging:</strong> A logger middleware prints every dispatched action and the resulting state to the console — invaluable for debugging. Libraries like <code>redux-logger</code> do exactly this.</li>
+          <li><strong>Analytics / monitoring:</strong> Track every dispatched action as a user event — send to an analytics service without touching any component code.</li>
+          <li><strong>Error reporting:</strong> Wrap dispatch in try/catch to catch reducer errors and send them to Sentry or another error tracking service.</li>
+          <li><strong>API middleware (redux-saga):</strong> Redux Saga is a more powerful alternative to thunks — it uses generator functions to handle complex async flows (race conditions, polling, request cancellation) as a separate middleware layer.</li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — custom logger middleware + applying middleware</div>
+          <pre><span class="cm">// Custom middleware — a function returning a function returning a function</span>
+<span class="kw">const</span> <span class="fn">loggerMiddleware</span> = store => next => action => {
+  <span class="fn">console</span>.<span class="fn">group</span>(action.type);
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Dispatching:'</span>, action);
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'State before:'</span>, store.<span class="fn">getState</span>());
+  <span class="kw">const</span> result = <span class="fn">next</span>(action); <span class="cm">// passes action to next middleware or reducer</span>
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'State after:'</span>, store.<span class="fn">getState</span>());
+  <span class="fn">console</span>.<span class="fn">groupEnd</span>();
+  <span class="kw">return</span> result;
+};
+
+<span class="cm">// Apply middleware in RTK's configureStore</span>
+<span class="kw">const</span> store = <span class="fn">configureStore</span>({
+  reducer: { cart: cartReducer },
+  middleware: (getDefaultMiddleware) =>
+    <span class="fn">getDefaultMiddleware</span>().<span class="fn">concat</span>(loggerMiddleware),
+    <span class="cm">// getDefaultMiddleware() includes redux-thunk by default</span>
+});</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q26 -->
+    <div class="qa-card" id="q26">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q26</span>
+        <span class="q-text">How can you handle Asynchronous Operations and side effects in React-Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Redux reducers are <em>pure synchronous functions</em> — they cannot perform API calls, access localStorage, or do anything asynchronous. Async operations and side effects must happen <em>outside the reducer</em>, before the final state update is dispatched. Redux's middleware system is what enables this.</p>
+        <p><strong>The main approaches to async in Redux:</strong></p>
+        <ul>
+          <li>
+            <strong>1. RTK's <code>createAsyncThunk</code> (recommended):</strong> The most ergonomic and standard approach for most apps. You define an async function that performs the API call and returns data. RTK automatically dispatches three actions: <code>pending</code> (request started), <code>fulfilled</code> (success with data), and <code>rejected</code> (failure with error). You handle these in <code>extraReducers</code> inside the slice to update loading, data, and error state accordingly.
+          </li>
+          <li>
+            <strong>2. Manual Thunks:</strong> Write your own thunk — a function that receives <code>dispatch</code> and <code>getState</code> and manually dispatches actions at each stage. More verbose but gives maximum control over the async flow (e.g., conditionally dispatching based on current state via <code>getState()</code>).
+          </li>
+          <li>
+            <strong>3. Redux Saga:</strong> A separate middleware that uses ES6 generator functions to handle complex async flows — race conditions, polling, debouncing, request cancellation, parallel requests. More powerful but significantly more complex to learn. Best for enterprise apps with intricate async requirements.
+          </li>
+          <li>
+            <strong>4. RTK Query:</strong> The highest-level solution — a complete data fetching and caching layer built into RTK. It eliminates most manual async thunk code entirely. Define your API endpoints once, and RTK Query generates hooks (<code>useGetUsersQuery</code>, <code>useCreateUserMutation</code>) that handle fetching, caching, loading states, error handling, and cache invalidation automatically.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">jsx — createAsyncThunk: the standard async pattern</div>
+          <pre><span class="kw">import</span> { createSlice, createAsyncThunk } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>;
+
+<span class="cm">// 1. Define the thunk — async function that returns data</span>
+<span class="kw">export const</span> <span class="fn">fetchUsers</span> = <span class="fn">createAsyncThunk</span>(
+  <span class="str">'users/fetchAll'</span>,               <span class="cm">// action type prefix</span>
+  <span class="kw">async</span> (_, { rejectWithValue }) => {
+    <span class="kw">try</span> {
+      <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/users'</span>);
+      <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">'Server error'</span>);
+      <span class="kw">return</span> res.<span class="fn">json</span>(); <span class="cm">// becomes fulfilled action.payload</span>
+    } <span class="kw">catch</span> (err) {
+      <span class="kw">return</span> <span class="fn">rejectWithValue</span>(err.message); <span class="cm">// becomes rejected action.payload</span>
+    }
+  }
+);
+
+<span class="cm">// 2. Handle all three states in extraReducers</span>
+<span class="kw">const</span> usersSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'users'</span>,
+  initialState: { items: [], loading: <span class="kw">false</span>, error: <span class="kw">null</span> },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .<span class="fn">addCase</span>(fetchUsers.pending,   state => {
+        state.loading = <span class="kw">true</span>; state.error = <span class="kw">null</span>;
+      })
+      .<span class="fn">addCase</span>(fetchUsers.fulfilled, (state, { payload }) => {
+        state.loading = <span class="kw">false</span>; state.items = payload;
+      })
+      .<span class="fn">addCase</span>(fetchUsers.rejected,  (state, { payload }) => {
+        state.loading = <span class="kw">false</span>; state.error = payload;
+      });
+  },
+});
+
+<span class="cm">// 3. Dispatch from component</span>
+<span class="kw">function</span> <span class="cn">UserList</span>() {
+  <span class="kw">const</span> dispatch  = <span class="fn">useDispatch</span>();
+  <span class="kw">const</span> { items, loading, error } = <span class="fn">useSelector</span>(s => s.users);
+  <span class="fn">useEffect</span>(() => { <span class="fn">dispatch</span>(<span class="fn">fetchUsers</span>()); }, [dispatch]);
+  <span class="kw">if</span> (loading) <span class="kw">return</span> <span class="tag">&lt;Spinner /&gt;</span>;
+  <span class="kw">if</span> (error)   <span class="kw">return</span> <span class="tag">&lt;p</span> <span class="at">className</span>=<span class="str">"error"</span><span class="tag">&gt;</span>{error}<span class="tag">&lt;/p&gt;</span>;
+  <span class="kw">return</span> items.<span class="fn">map</span>(u => <span class="tag">&lt;UserCard</span> <span class="at">key</span>={u.id} <span class="at">user</span>={u} <span class="tag">/&gt;</span>);
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q27 -->
+    <div class="qa-card" id="q27">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q27</span>
+        <span class="q-text">How does Error Handling work in Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p>Error handling in Redux follows the same unidirectional data flow as everything else — errors become <em>state</em>. Instead of trying to catch errors at the UI level and display them locally, you capture errors in the async logic, dispatch them as actions, store them in the Redux state, and let components read and display the error state via <code>useSelector</code>.</p>
+        <p><strong>The standard pattern — error as state:</strong></p>
+        <ul>
+          <li>Include an <code>error</code> field in each slice's initial state (typically <code>null</code> when no error, or an error message string when something went wrong).</li>
+          <li>In async thunks (<code>createAsyncThunk</code>), use <code>rejectWithValue(errorMessage)</code> to pass the error to the rejected action's payload in a controlled way.</li>
+          <li>In <code>extraReducers</code>, handle the <code>.rejected</code> case by setting <code>state.error = action.payload</code>.</li>
+          <li>In the component, select the error state and conditionally render an error message.</li>
+        </ul>
+        <p><strong>Error reset:</strong> Always dispatch a reset action or clear the error state when the user retries or navigates away — stale error messages from a previous attempt shouldn't persist.</p>
+        <p><strong>Global error handling with middleware:</strong> You can write middleware that intercepts any <em>rejected</em> action and sends it to an error monitoring service (Sentry, Datadog) globally — without adding tracking code to every slice.</p>
+        <div class="code-block">
+          <div class="code-label">jsx — complete error handling pattern</div>
+          <pre><span class="cm">// Slice — error is part of state</span>
+<span class="kw">const</span> ordersSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'orders'</span>,
+  initialState: { data: [], loading: <span class="kw">false</span>, error: <span class="kw">null</span> },
+  reducers: {
+    clearError: state => { state.error = <span class="kw">null</span>; }, <span class="cm">// reset action</span>
+  },
+  extraReducers: builder => {
+    builder
+      .<span class="fn">addCase</span>(fetchOrders.pending,   state => {
+        state.loading = <span class="kw">true</span>; state.error = <span class="kw">null</span>; <span class="cm">// clear on retry</span>
+      })
+      .<span class="fn">addCase</span>(fetchOrders.fulfilled, (state, { payload }) => {
+        state.loading = <span class="kw">false</span>; state.data = payload;
+      })
+      .<span class="fn">addCase</span>(fetchOrders.rejected,  (state, { payload }) => {
+        state.loading = <span class="kw">false</span>;
+        state.error = payload || <span class="str">'Something went wrong. Please try again.'</span>;
+      });
+  },
+});
+
+<span class="cm">// Component — reads error from state and displays it</span>
+<span class="kw">function</span> <span class="cn">OrdersPage</span>() {
+  <span class="kw">const</span> dispatch          = <span class="fn">useDispatch</span>();
+  <span class="kw">const</span> { data, loading, error } = <span class="fn">useSelector</span>(s => s.orders);
+
+  <span class="fn">useEffect</span>(() => { <span class="fn">dispatch</span>(<span class="fn">fetchOrders</span>()); }, [dispatch]);
+
+  <span class="kw">if</span> (loading) <span class="kw">return</span> <span class="tag">&lt;Spinner /&gt;</span>;
+
+  <span class="kw">if</span> (error) <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="at">className</span>=<span class="str">"error-box"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;p&gt;</span>⚠️ {error}<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;button</span> <span class="at">onClick</span>={() => {
+        <span class="fn">dispatch</span>(ordersSlice.actions.<span class="fn">clearError</span>());  <span class="cm">// clear error</span>
+        <span class="fn">dispatch</span>(<span class="fn">fetchOrders</span>());                       <span class="cm">// retry</span>
+      }}<span class="tag">&gt;</span>Try Again<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+
+  <span class="kw">return</span> data.<span class="fn">map</span>(o => <span class="tag">&lt;OrderCard</span> <span class="at">key</span>={o.id} <span class="at">order</span>={o} <span class="tag">/&gt;</span>);
+}
+
+<span class="cm">// Global error middleware — report all rejected actions to monitoring</span>
+<span class="kw">const</span> errorMiddleware = store => next => action => {
+  <span class="kw">if</span> (action.type.<span class="fn">endsWith</span>(<span class="str">'/rejected'</span>)) {
+    Sentry.<span class="fn">captureException</span>(action.payload); <span class="cm">// global error tracking</span>
+  }
+  <span class="kw">return</span> <span class="fn">next</span>(action);
+};</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q28 -->
+    <div class="qa-card" id="q28">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="q-num">Q28</span>
+        <span class="q-text">What is the difference between Flux and Redux?</span>
+        <span class="key-tag">⭐ Key Concept</span>
+        <span class="chevron">›</span>
+      </button>
+      <div class="qa-answer">
+        <p><strong>Flux</strong> is an <em>application architecture pattern</em> (not a library) originally introduced by Facebook alongside React to address the problems of bidirectional data flow in MVC applications. <strong>Redux</strong> is a <em>concrete state management library</em> heavily inspired by Flux, but it significantly refines and simplifies the pattern with ideas from functional programming (specifically Elm's architecture).</p>
+        <p><strong>Key differences:</strong></p>
+        <ul>
+          <li>
+            <strong>Single Store vs Multiple Stores:</strong> Flux allows and encourages <em>multiple stores</em> — one per domain (UserStore, CartStore, ProductStore). Each store manages its own state independently. Redux enforces a <em>single store</em> — all application state lives in one tree. Multiple domains are handled via separate reducer functions (slices) that each manage their own sub-tree.
+          </li>
+          <li>
+            <strong>Dispatcher:</strong> Flux has a central <em>Dispatcher</em> — a dedicated module that routes all actions to all registered stores. Every store receives every action and decides whether to handle it. Redux has <em>no separate Dispatcher</em> — the store itself handles action routing to reducers directly. This simplification eliminates an entire conceptual layer.
+          </li>
+          <li>
+            <strong>Reducers vs Store Methods:</strong> In Flux, stores contain both the <em>state</em> and the <em>logic</em> for updating that state (through registered handler methods). In Redux, state and update logic are separated — the <em>store</em> holds state, and <em>reducers</em> (pure functions external to the store) handle updates. This separation makes Redux reducers far more testable and composable.
+          </li>
+          <li>
+            <strong>Pure Functions vs Mutable Logic:</strong> Flux stores can use any logic — including imperative, stateful mutations. Redux requires <em>pure reducer functions</em> — no side effects, same input always gives the same output. This constraint is what enables time-travel debugging.
+          </li>
+          <li>
+            <strong>Library vs Pattern:</strong> Flux is a pattern — you implement it yourself or use one of many Flux implementations (Alt, Flummox, McFly). Redux is a specific, opinionated library with a standard API that you install and use as-is.
+          </li>
+        </ul>
+        <div class="code-block">
+          <div class="code-label">concept — flux vs redux architecture</div>
+          <pre><span class="cm">// ── FLUX Architecture ──</span>
+<span class="cm">// Action → Dispatcher → Store1 (handles some)</span>
+<span class="cm">//                     → Store2 (handles others)</span>
+<span class="cm">//                     → Store3 (handles others)</span>
+<span class="cm">// Multiple stores, each with own state + logic</span>
+<span class="cm">// Dispatcher routes actions to all stores</span>
+
+<span class="cm">// ── REDUX Architecture ──</span>
+<span class="cm">// Action → Single Store → Root Reducer</span>
+<span class="cm">//                       ├── authReducer   (handles auth/* actions)</span>
+<span class="cm">//                       ├── cartReducer   (handles cart/* actions)</span>
+<span class="cm">//                       └── usersReducer  (handles users/* actions)</span>
+<span class="cm">// Single store, combined reducers, no separate Dispatcher</span>
+<span class="cm">// Pure functions, immutable updates, time-travel debugging</span>
+
+<span class="cm">// Redux in code — what replaces the Dispatcher</span>
+<span class="kw">const</span> store = <span class="fn">configureStore</span>({
+  reducer: {               <span class="cm">// combineReducers happens automatically</span>
+    auth:  authReducer,   <span class="cm">// authReducer handles 'auth/*' action types</span>
+    cart:  cartReducer,   <span class="cm">// cartReducer handles 'cart/*' action types</span>
+    users: usersReducer,  <span class="cm">// usersReducer handles 'users/*' action types</span>
+  }
+});
+<span class="cm">// store.dispatch() is the "Dispatcher" — no separate module needed</span></pre>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section redux4 -->
+</div><!-- /main -->
+
+<footer>// Redux Guide · Interview Cheatsheet · More topics coming soon</footer>
+
+<script>
+  function toggle(btn) {
+    const card = btn.closest('.qa-card');
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
