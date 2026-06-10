@@ -7,6 +7,7 @@ A clean and responsive collection of frontend development cheatsheets for quick 
 * HTML, CSS, Bootstrap
 * Javascript
 * redux
+* java
 
 ## ✨ Features
 
@@ -22,6 +23,7 @@ A clean and responsive collection of frontend development cheatsheets for quick 
 * `HTML, CSS, BOOTSTTRAP.html`
 * `REACT.html'
 * redux
+* java
 
 ## 🌐 Live Preview
 
