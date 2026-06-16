@@ -28,6 +28,7 @@ A clean and responsive collection of frontend development cheatsheets for quick 
 * java
 * nodejs
 * Expressjs
+* Javascript
 
 ## 🌐 Live Preview
 
