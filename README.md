@@ -9,6 +9,7 @@ A clean and responsive collection of frontend development cheatsheets for quick 
 * redux
 * java
 * nodejs
+* Reactjs
 
 ## ✨ Features
 
