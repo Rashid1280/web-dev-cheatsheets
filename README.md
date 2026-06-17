@@ -1,6 +1,6 @@
-# Frontend Cheatsheets 🚀
+# Fullstack web dev Cheatsheets 🚀
 
-A clean and responsive collection of frontend development cheatsheets for quick revision, interview prep, and daily reference.
+A clean and responsive collection of fullstack web development cheatsheets for quick revision, interview prep, and daily reference.
 
 ## 📚 Included Guides
 
